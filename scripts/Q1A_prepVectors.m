@@ -25,11 +25,6 @@ featureVectors_raw = wine_data(:,2:14);
 featureVectors_norm = featureVectors_raw/norm(featureVectors_raw,2);
 
 %% partition data
-training_classes = zeros(1, 118);
-validation_classes = zeros(1, 20);
-testing_classes= zeros(1, 40);
-
-training_raw = zeros(118, 13);
 
 classIndexes = [ 
 %class: 1  2   3
@@ -49,8 +44,6 @@ partitionVectorIndex = [
         86  15  29;  % 2
         118 20  40]; % 3
     
-    
-    
 for i = 1:numClasses
     training_classes( partitionVectorIndex(i, 1)+1 : partitionVectorIndex(i+1, 1) ) = featureVectors_classes( classPartitionIndex(1, i)+1 : classPartitionIndex(2, i) );
     validation_classes( partitionVectorIndex(i, 2)+1 : partitionVectorIndex(i+1, 2) ) = featureVectors_classes( classPartitionIndex(2, i)+1 : classPartitionIndex(3, i) );
@@ -61,15 +54,14 @@ for i = 1:numClasses
     testing_raw( partitionVectorIndex(i, 3)+1 : partitionVectorIndex(i+1, 3), : ) = featureVectors_raw( classPartitionIndex(3, i)+1 : classPartitionIndex(4, i), : );
     
     training_norm( partitionVectorIndex(i, 1)+1 : partitionVectorIndex(i+1, 1), : ) = featureVectors_norm( classPartitionIndex(1, i)+1 : classPartitionIndex(2, i), : );
-    validation_norm( partitionVectorIndex(i, 2)+1 : partitionVectorIndex(i+1, 2), : ) = featureVectors_norm( classPartitionIndex(2, i)+1 : classPartitionIndex(3, i), : );
+    validation_no
+    rm( partitionVectorIndex(i, 2)+1 : partitionVectorIndex(i+1, 2), : ) = featureVectors_norm( classPartitionIndex(2, i)+1 : classPartitionIndex(3, i), : );
     testing_norm( partitionVectorIndex(i, 3)+1 : partitionVectorIndex(i+1, 3), : ) = featureVectors_norm( classPartitionIndex(3, i)+1 : classPartitionIndex(4, i), : );
 end
                     
 
 if ~isempty(dataPath)
-    save(char(strcat(dataPath, '/wine_featureVectors')),'featureVectors_classes','featureVectors_raw','featureVectors_norm')
     save(char(strcat(dataPath, '/wine_separatedData')),'training_classes','validation_classes','testing_classes','training_raw','validation_raw','testing_raw','training_norm','validation_norm','testing_norm')
 else
-    save('wine_featureVectors','featureVectors_classes','featureVectors_raw','featureVectors_norm')
     save('wine_separatedData','training_classes','validation_classes','testing_classes','training_raw','validation_raw','testing_raw','training_norm','validation_norm','testing_norm')
 end
