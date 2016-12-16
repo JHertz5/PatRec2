@@ -22,7 +22,7 @@ numClasses = 3;
 %% extract raw data
 featureVectors_classes = wine_data(:,1);
 featureVectors_raw = wine_data(:,2:14);
-featureVectors_norm = featureVectors_raw/norm(featureVectors_raw,2);
+featureVectors_norm = normc(featureVectors_raw);
 
 %% partition data
 
@@ -30,7 +30,7 @@ classIndexes = [
 %class: 1  2   3
         59 130 178 ];
                     
-classPartitionIndex = [ 
+classPartitionIndex = [
 %class: 1  2  3
         0  59  130;
         39 106 162;  % training
@@ -54,8 +54,7 @@ for i = 1:numClasses
     testing_raw( partitionVectorIndex(i, 3)+1 : partitionVectorIndex(i+1, 3), : ) = featureVectors_raw( classPartitionIndex(3, i)+1 : classPartitionIndex(4, i), : );
     
     training_norm( partitionVectorIndex(i, 1)+1 : partitionVectorIndex(i+1, 1), : ) = featureVectors_norm( classPartitionIndex(1, i)+1 : classPartitionIndex(2, i), : );
-    validation_no
-    rm( partitionVectorIndex(i, 2)+1 : partitionVectorIndex(i+1, 2), : ) = featureVectors_norm( classPartitionIndex(2, i)+1 : classPartitionIndex(3, i), : );
+    validation_norm( partitionVectorIndex(i, 2)+1 : partitionVectorIndex(i+1, 2), : ) = featureVectors_norm( classPartitionIndex(2, i)+1 : classPartitionIndex(3, i), : );
     testing_norm( partitionVectorIndex(i, 3)+1 : partitionVectorIndex(i+1, 3), : ) = featureVectors_norm( classPartitionIndex(3, i)+1 : classPartitionIndex(4, i), : );
 end
                     
