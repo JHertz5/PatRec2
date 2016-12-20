@@ -1,5 +1,9 @@
 %%
 
+% run the script
+% it allows you to choose dimensions for each case along which there is
+% most variance/covariance (pos or neg).
+
 clc
 %clear all
 close all
@@ -17,35 +21,50 @@ end
 load wine_separatedData.mat
 load wine_covMatrix
 
-%%
-
-% analyse covariance matrices. -> Find dimensions along whicht here is most
-% variance. Most dependable dimensions for ea h individual class and
-% combined classes.
-% Each class can have their own set of dimensions of most variance -> that
-% dimension will enable identification
-% Cov matrix for all classes will tell us the set of dimensions along which
-% all three classes vary the most. They wont necessarily have to be the
-% same as those obtained from individual classes.
-
+%% User Variables
+numMaxMin = 5; % select hom many sest of dimenisons (of max pos and max neg variance) we want
+toPlot = 1; % choose which matrix' data to plot: 1-cov1Norm, 2-cov1Raw ... 7-cov_allNorm, 8-cov_allRaw
 %% Find dimensions along which there is most covariance
+
+% put all covs on a single matrix
 matrices = cat(3,cov_1Norm,cov_1Raw,cov_2Norm,cov_2Raw,cov_3Norm,cov_3Raw,cov_allNorm,cov_allRaw);
+
+% store names for printf
 names = {'cov_1Norm','cov_1Raw','cov_2Norm','cov_2Raw','cov_3Norm','cov_3Raw','cov_allNorm','cov_allRaw'};
-for j = 1:8
-    for i = 1:5
-        matrix = matrices(:,:,j); %which matrix to use
+
+%initialise dimension matrix
+dims = zeros(2*numMaxMin,2,8);
+cov_vals = zeros(2*numMaxMin,8);
+
+for j = 1:8 %iterate thorugh all matrices
+    for i = 1:numMaxMin %get all sets of dims
+        
+        matrix = matrices(:,:,j); % which matrix to use
         pos = i; % find nth highest value
         [svals,idx] = sort(matrix(:),'descend'); % sort to vector
         [m,n] = ind2sub(size(matrix),idx(pos)); % position in the matrix
         fprintf('%s ::: %i pos. var. ::: dims. %i : %i \n\n',string(names(j)),pos, m, n);
+        dims(i,:, j) = [m,n]; % store
+        cov_vals(i,j) = svals(i);
         
-        pos = 170-i;
+        pos = 170-i; % find nth most negative value
         [m,n] = ind2sub(size(matrix),idx(pos)); % position in the matrix
         fprintf('%s ::: %i neg. var. ::: dims. %i : %i \n\n',string(names(j)),i, m, n);
+        dims(2*numMaxMin+1-i,:, j) = [m,n]; % store
+        cov_vals(2*numMaxMin+1-i,j) = svals(end+1-i);
     end
 end
 %%
 
-%figure(1)
-%scatter(training_raw(:,m),training_raw(:,n),'filled') %plots the data along the two dimensions found above
+[V,D] = eig(cov_1Norm);
 
+
+figure(1)
+for i = 1:2*numMaxMin
+    subplot(2,5,i)
+    hold all
+    title(['Cov Val = ' num2str(cov_vals(i,toPlot))]);
+    xlabel(num2str(dims(i,1,toPlot)))
+    ylabel(num2str(dims(i,2,toPlot)))
+    scatter(training_raw(class1Indexes,dims(i,1,toPlot)),training_raw(class1Indexes,dims(i,2,toPlot)),'filled') %plots the data along the two dimensions found above
+end
