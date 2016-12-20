@@ -1,4 +1,5 @@
 clc
+clear all
 close all
 
 %add data directory to path
@@ -22,6 +23,9 @@ numClasses = 3;
 %% extract raw data
 featureVectors_classes = wine_data(:,1);
 featureVectors_raw = wine_data(:,2:14);
+
+%% normalise vectors L2
+
 featureVectors_norm = normc(featureVectors_raw);
 
 %% partition data
