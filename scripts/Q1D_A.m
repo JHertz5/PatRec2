@@ -50,3 +50,102 @@ end
 
 %% Calculate accuracy
 accVal2 = (length(testing_raw)-nnz(NNclasses - testing_classes))*100/length(testing_raw);
+
+
+%% do that for L1, L2, Chi2, histogram intersection and correlation
+
+numBins = 50; % +1, user variable. 
+
+% one histogram per class
+
+%training histograms for norm data
+
+% extract training data for each class and storem them as a vector (not
+% matrix)
+
+class1 = find(training_classes == 1);
+[m,n] = size(training_raw(class1,:));
+class1dataNorm = reshape(training_norm(class1,:),m*n,1);
+
+class2 = find(training_classes == 2);
+[m,n] = size(training_raw(class2,:));
+class2dataNorm = reshape(training_norm(class2,:),m*n,1);
+
+class3 = find(training_classes == 3);
+[m,n] = size(training_raw(class3,:));
+class3dataNorm = reshape(training_norm(class3,:),m*n,1);
+
+% bin width
+binW = 0.2/numBins;
+
+% setup bins
+bins = 0:binW:0.2;
+
+% setups bin heights for three classes
+s = zeros(numBins+1,3);
+
+% calculate bin heights for class 1 (norm)
+[nb1,xb1] = hist(class1dataNorm,bins);
+s(:,1) = nb1./(sum(nb1)*binW);
+
+% calculate bin heights for class 2 (norm)
+[nb2,xb2] = hist(class2dataNorm,bins);
+s(:,2) = nb2./(sum(nb2)*binW);
+
+% calculate bin heights for class 3 (norm)
+[nb3,xb3] = hist(class3dataNorm,bins);
+s(:,3) = nb3./(sum(nb3)*binW);
+
+%% testing data using histogram intersection
+
+% uses all the testing data in a given testing class. dont thnk thats
+% correct
+
+% find testing data for class 1 and store on a vector
+class1T = find(testing_classes == 1);
+[m,n] = size(testing_raw(class1T,:));
+class1TNorm = reshape(testing_norm(class1T,:),m*n,1);
+
+% find testing data for class 2 and store on a vector
+class2T = find(testing_classes == 2);
+[m,n] = size(testing_raw(class2T,:));
+class2TNorm = reshape(testing_norm(class2T,:),m*n,1);
+
+% find testing data for class 3 and store on a vector
+class3T = find(testing_classes == 3);
+[m,n] = size(testing_raw(class3T,:));
+class3TNorm = reshape(testing_norm(class3T,:),m*n,1);
+
+% calcuate bin heights for a testing class of choice
+[nbt,xbt] = hist(class3TNorm,bins);
+st = nbt./(sum(nbt)*binW);
+
+% calculate histogram interesection
+for i = 1:numBins+1
+    inter1(i) = min(s(i,1),st(i));
+    inter2(i) = min(s(i,2),st(i));
+    inter3(i) = min(s(i,3),st(i));
+end
+
+% calculate biggest score (total intersection area)
+score1 = sum(inter1)*binW
+score2 = sum(inter2)*binW
+score3 = sum(inter3)*binW
+
+%% testing data using one 13-element vector
+
+% test a single vector (norm)
+[nbt,xbt] = hist(testing_norm(15,:),bins);
+st = nbt./(sum(nbt)*binW);
+
+% calculate intersection
+for i = 1:numBins+1
+    inter1(i) = min(s(i,1),st(i));
+    inter2(i) = min(s(i,2),st(i));
+    inter3(i) = min(s(i,3),st(i));
+end
+
+% calculate scores
+score1 = sum(inter1)*binW
+score2 = sum(inter2)*binW
+score3 = sum(inter3)*binW
