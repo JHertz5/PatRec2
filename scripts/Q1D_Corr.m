@@ -46,9 +46,6 @@ Corrclasses = zeros(1,length(testing_norm));
 for i = 1:length(testing_raw)
     w = zeros(1,length(training_raw));
     for j = 1:length(training_raw)
-        % normalise the norm vectors again so the identity corr(x,y) = x*y
-        % holds (normally corr(x,y) = (x-y)^@ = x^2 + y^2 - 2xy, where x^2
-        % and y^2 are consts.
         
         w(j) = sum((testing_raw(i,:) - training_raw(j,:)).^2);
     end
