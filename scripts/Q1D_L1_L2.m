@@ -47,6 +47,7 @@ for i = 1:length(testing_raw)
     end
     [minVal, idx] = min(w);
     L1classes(i) = training_classes(idx);
+    h  = w;
     clear w
 end
 
