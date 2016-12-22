@@ -20,27 +20,26 @@ load wine_covMatrix
 %% HISTOGRAM INTERSECTION FOR RAW DATA
 maxRange = 1700;
 
+% extract training data for each class and storem them as a vector (not
+% matrix)
+class1 = find(training_classes == 1);
+[m,n] = size(training_raw(class1,:));
+class1dataRaw = reshape(training_raw(class1,:),m*n,1);
+
+class2 = find(training_classes == 2);
+[m,n] = size(training_raw(class2,:));
+class2dataRaw = reshape(training_raw(class2,:),m*n,1);
+
+class3 = find(training_classes == 3);
+[m,n] = size(training_raw(class3,:));
+class3dataRaw = reshape(training_raw(class3,:),m*n,1);
+
 for hh = 1:100
     numBins = hh; % +1, user variable.
     
     % one histogram per class
     
     %training histograms for norm data
-    
-    % extract training data for each class and storem them as a vector (not
-    % matrix)
-    
-    class1 = find(training_classes == 1);
-    [m,n] = size(training_raw(class1,:));
-    class1dataRaw = reshape(training_raw(class1,:),m*n,1);
-    
-    class2 = find(training_classes == 2);
-    [m,n] = size(training_raw(class2,:));
-    class2dataRaw = reshape(training_raw(class2,:),m*n,1);
-    
-    class3 = find(training_classes == 3);
-    [m,n] = size(training_raw(class3,:));
-    class3dataRaw = reshape(training_raw(class3,:),m*n,1);
     
     % bin width
     binW = maxRange/numBins;
@@ -54,7 +53,7 @@ for hh = 1:100
     % calculate bin heights for class 1 (norm)
     [nb1,xb1] = hist(class1dataRaw,bins);
     s(:,1) = nb1./(sum(nb1)*binW);
-
+    
     % calculate bin heights for class 2 (norm)
     [nb2,xb2] = hist(class2dataRaw,bins);
     s(:,2) = nb2./(sum(nb2)*binW);
@@ -62,7 +61,7 @@ for hh = 1:100
     % calculate bin heights for class 3 (norm)
     [nb3,xb3] = hist(class3dataRaw,bins);
     s(:,3) = nb3./(sum(nb3)*binW);
-
+    
     %% testing data using one 13-element vector
     
     % test a single vector (norm)

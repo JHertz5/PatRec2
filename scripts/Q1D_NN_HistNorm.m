@@ -54,27 +54,27 @@ accVal2 = (length(testing_raw)-nnz(NNclasses - testing_classes))*100/length(test
 
 %% HISTOGRAM INTERSECTION FOR NORM DATA
 
+% extract training data for each class and storem them as a vector (not
+% matrix)
+
+class1 = find(training_classes == 1);
+[m,n] = size(training_raw(class1,:));
+class1dataNorm = reshape(training_norm(class1,:),m*n,1);
+
+class2 = find(training_classes == 2);
+[m,n] = size(training_raw(class2,:));
+class2dataNorm = reshape(training_norm(class2,:),m*n,1);
+
+class3 = find(training_classes == 3);
+[m,n] = size(training_raw(class3,:));
+class3dataNorm = reshape(training_norm(class3,:),m*n,1);
+
 for kk = 1:100
     numBins = kk; % +1, user variable.
     
     % one histogram per class
     
     %training histograms for norm data
-    
-    % extract training data for each class and storem them as a vector (not
-    % matrix)
-    
-    class1 = find(training_classes == 1);
-    [m,n] = size(training_raw(class1,:));
-    class1dataNorm = reshape(training_norm(class1,:),m*n,1);
-    
-    class2 = find(training_classes == 2);
-    [m,n] = size(training_raw(class2,:));
-    class2dataNorm = reshape(training_norm(class2,:),m*n,1);
-    
-    class3 = find(training_classes == 3);
-    [m,n] = size(training_raw(class3,:));
-    class3dataNorm = reshape(training_norm(class3,:),m*n,1);
     
     % bin width
     binW = 0.2/numBins;
