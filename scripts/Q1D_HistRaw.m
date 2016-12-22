@@ -17,45 +17,11 @@ end
 load wine_separatedData.mat
 load wine_covMatrix
 
-%% K-NN for Raw Feature Vectors
+%% HISTOGRAM INTERSECTION FOR RAW DATA
+maxRange = 1700;
 
-% k-NN, with k = 1
-% from each testing vector sub every training vector and find min
-w = zeros(1,length(training_raw));
-NNclasses = zeros(1, length(testing_raw));
-for i = 1:length(testing_raw)
-    for j = 1:length(training_raw)
-        w(j) = norm(testing_raw(i,:) - training_raw(j,:));
-    end
-    [minVal, idx] = min(w);
-    NNclasses(i) = training_classes(idx);
-end
-
-%% Calculate accuracy
-accVal1 = (length(testing_raw)-nnz(NNclasses - testing_classes))*100/length(testing_raw);
-
-%% K-NN for Norm Feature Vectors
-
-% k-NN, with k = 1
-% from each testing vector sub every training vector and find min
-w = zeros(1,length(training_norm));
-NNclasses = zeros(1, length(testing_norm));
-for i = 1:length(testing_norm)
-    for j = 1:length(training_norm)
-        w(j) = norm(testing_norm(i,:) - training_norm(j,:));
-    end
-    [minVal, idx] = min(w);
-    NNclasses(i) = training_classes(idx);
-end
-
-%% Calculate accuracy
-accVal2 = (length(testing_raw)-nnz(NNclasses - testing_classes))*100/length(testing_raw);
-
-
-%% HISTOGRAM INTERSECTION FOR NORM DATA
-
-for kk = 1:100
-    numBins = kk; % +1, user variable.
+for hh = 1:100
+    numBins = hh; % +1, user variable.
     
     % one histogram per class
     
@@ -66,43 +32,43 @@ for kk = 1:100
     
     class1 = find(training_classes == 1);
     [m,n] = size(training_raw(class1,:));
-    class1dataNorm = reshape(training_norm(class1,:),m*n,1);
+    class1dataRaw = reshape(training_raw(class1,:),m*n,1);
     
     class2 = find(training_classes == 2);
     [m,n] = size(training_raw(class2,:));
-    class2dataNorm = reshape(training_norm(class2,:),m*n,1);
+    class2dataRaw = reshape(training_raw(class2,:),m*n,1);
     
     class3 = find(training_classes == 3);
     [m,n] = size(training_raw(class3,:));
-    class3dataNorm = reshape(training_norm(class3,:),m*n,1);
+    class3dataRaw = reshape(training_raw(class3,:),m*n,1);
     
     % bin width
-    binW = 0.2/numBins;
+    binW = maxRange/numBins;
     
     % setup bins
-    bins = 0:binW:0.2;
+    bins = 0:binW:maxRange;
     
     % setups bin heights for three classes
     s = zeros(numBins+1,3);
-    
+    figure(1)
     % calculate bin heights for class 1 (norm)
-    [nb1,xb1] = hist(class1dataNorm,bins);
+    [nb1,xb1] = hist(class1dataRaw,bins);
     s(:,1) = nb1./(sum(nb1)*binW);
-    
+
     % calculate bin heights for class 2 (norm)
-    [nb2,xb2] = hist(class2dataNorm,bins);
+    [nb2,xb2] = hist(class2dataRaw,bins);
     s(:,2) = nb2./(sum(nb2)*binW);
     
     % calculate bin heights for class 3 (norm)
-    [nb3,xb3] = hist(class3dataNorm,bins);
+    [nb3,xb3] = hist(class3dataRaw,bins);
     s(:,3) = nb3./(sum(nb3)*binW);
-    
+
     %% testing data using one 13-element vector
     
     % test a single vector (norm)
-    for jj = 1:length(testing_norm)
+    for ll = 1:length(testing_raw)
         
-        [nbt,xbt] = hist(testing_norm(jj,:),bins);
+        [nbt,xbt] = hist(testing_raw(ll,:),bins);
         st = nbt./(sum(nbt)*binW);
         
         % calculate intersection
@@ -119,26 +85,27 @@ for kk = 1:100
         
         switch max([score1 score2 score3])
             case score1
-                assClass(jj) = 1;
+                assClass(ll) = 1;
             case score2
-                assClass(jj) = 2;
+                assClass(ll) = 2;
             case score3
-                assClass(jj) = 3;
+                assClass(ll) = 3;
         end
         
     end
-    acc(kk) = (1-nnz(assClass - testing_classes)/length(testing_classes))*100;
+    acc(hh) = (1-nnz(assClass - testing_classes)/length(testing_classes))*100;
 end
 
 filacc = filter(0.167*[1 1 1 1 1 1],[1],acc);
+
 figure(1)
-plot(1:kk,acc,'linewidth',2)
+plot(1:hh,acc,'linewidth',2)
 hold all
-plot(-2:(kk-3),filacc,'linewidth',2)
-title('Accuracy of Histogram Intersection Classification Method (NORM)')
+plot(-2:(hh-3),filacc,'linewidth',2)
+title('Accuracy of Histogram Intersection Classification Method (RAW)')
 xlabel('Number of histogram bins')
 ylabel('Accuracy [%]')
 set(gca,'fontsize',20)
-xlim([0 kk])
+xlim([0 hh])
 grid on
 grid minor
