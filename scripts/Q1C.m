@@ -23,7 +23,7 @@ load wine_covMatrix
 
 %% User Variables
 numMaxMin = 5; % select hom many sest of dimenisons (of max pos and max neg variance) we want
-toPlot = 1; % choose which matrix' data to plot: 1-cov1Norm, 2-cov1Raw ... 7-cov_allNorm, 8-cov_allRaw
+toPlot = 7; % choose which matrix' data to plot: 1-cov1Norm, 2-cov1Raw ... 7-cov_allNorm, 8-cov_allRaw
 %% Find dimensions along which there is most covariance
 
 % put all covs on a single matrix
@@ -55,9 +55,6 @@ for j = 1:8 %iterate thorugh all matrices
     end
 end
 %%
-
-[V,D] = eig(cov_1Norm);
-
 
 figure(1)
 for i = 1:2*numMaxMin
