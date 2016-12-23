@@ -67,12 +67,19 @@ Line 3\\
 \end{abstract}
 
 \section{Introduction}
+Line 1\\
+
+Line 2\\
+
+Line 3\\
 \section{Distance Metrics}
 \subsection{Distribution of Wine Data}
 
 The wine data ({\tt\small wine.csv}) provided consisted of three classes. It cis made up of 13 features representing chemical and optical information. The data can be analysed \textit{talis qualis}, however a more elaborate method is to investigate the covariance matrices. The raw data can supply us with information such as feature distribution (mean or spread), whereas covariance matrices will provide the dependency between features. This can be performed for all data altogether or for each class individually. Both methods will result in meaningful information as described in sections \ref{sec:CovAll} and \ref{sec:CovCla}. Furthermore the data was then normalised and the above was repeated.\footnote{Note that data was first separated as per instruction. Only training data is now being considered.} 
+
 \subsubsection{All Classes} \label{sec:CovAll}
-By investigating the data from all classes we will see that data varies altogether. We can investigate each feature and see what part of space it occupies. We can also determine how strongly all features are related to one another for all classes. Let us begin by examining the distributions of the raw data. The means of the feature distributions vary from around 0.36 for nonflavanoid phenols, through values of 1 to 3 and 10 to 100 to a single extreme at 737.1 for proline. The corresponding deviations are also quite spread out. The general trend is that the larger the mean the larger the standard deviation of the distribution. For example proline distribution has a standard deviation of 287 over 118 samples. The distributions of the features don't always seem to follow bell-shaped Gaussian distribution. However it should be noted that each distribution is in fact a sum of three independent distributions. Distribution of proline in Figure \ref{fig:DistProline} resembles a gamma distribution.
+
+\indent \indent By investigating the data from all classes we will see that data varies altogether. We can investigate each feature and see what part of space it occupies. We can also determine how strongly all features are related to one another for all classes. Let us begin by examining the distributions of the raw data. The means of the feature distributions vary from around 0.36 for nonflavanoid phenols, through values of 1 to 3 and 10 to 100 to a single extreme at 737.1 for proline. The corresponding deviations are also quite spread out. The general trend is that the larger the mean the larger the standard deviation of the distribution. For example proline distribution has a standard deviation of 287 over 118 samples. The distributions of the features don't always seem to follow bell-shaped Gaussian distribution. However it should be noted that each distribution is in fact a sum of three independent distributions. Distribution of proline in Figure \ref{fig:DistProline} resembles a gamma distribution.
 
 \begin{figure}[H]
 \centering
@@ -81,11 +88,12 @@ By investigating the data from all classes we will see that data varies altogeth
 \end{figure}
 
 \begin{table}[H]
-\caption{Sample Means and Standard Dev. for all Training Data}
+\caption{Sample Means and Standard Dev. for all Training Data \label{tab:statAll}}
+\small
 \begin{center}
-\begin{tabular}{|c c c c c|}
+\begin{tabular}{|c| c c c c|}
 \hline
-\bf RV & Alcohol & Ash & Hue & Proline \\ [0.5ex]
+\bf Stat/RV & Alcohol & Ash & Hue & Proline \\ [0.5ex]
 \hline
 \bf Mean & 12.7 & 2.38 & 0.95 & 737 \\ [0.5ex]
 \hline
@@ -97,7 +105,7 @@ By investigating the data from all classes we will see that data varies altogeth
 
 Looking at the covariance matrix of the raw training data we can see that proline covary with all other features quite strongly. This is however due to the fact that proline's distribution has a naturally high variance, thus corrupting the readings. The highest covariance for two different features excluding proline is that of magnesium (feature 5) and colour intensity (feature 10). However, these two features have second and third highest variance distributions. We have to therefore look at the covariance matrix of the normalised feature vectors.
 
-Highest positive covariance is observed for features 6 and 7 (total phenols and flavanoids), whereas the most negative covariance is found for features 2 and 7 (malic acid and flavanoids). The plot of the above cases is shown in Figure \ref{fig:covAll}.
+Highest positive covariance is observed for features 6 and 7 (total phenols and flavonoids), whereas the most negative covariance is found for features 2 and 7 (malic acid and flavonoids). The plot of the above cases is shown in Figure \ref{fig:covAll}. This tells us that there is possibly some correlation between the features, e.g. increasing the phenols count increases the number of flavonoids in wine. This does in fact hold in real world, as flavonoids are a subset of natural phenols.
 
 \begin{figure}[H]
 \centering
@@ -107,7 +115,54 @@ Highest positive covariance is observed for features 6 and 7 (total phenols and 
 
 \subsubsection{Individual Classes} \label{sec:CovCla}
 
+\indent \indent As mentioned earlier, the PDF seen in Figure \ref{fig:DistProline} is a summation of three other PDFs for classes 1, 2 and 3. This is shown in Figure \ref{fig:DistProline_Idv}. We can see that in fact, each individual proline random variable can be estimated with a Gaussian distribution. Given that the random variables can be thought of as independent, their sum is also normally distributed.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{../results/Q1_ProlineDist_Idv}
+\caption{PDF of Proline for Class 1 (blue), 2 (red) and 3 (green) Visualised \label{fig:DistProline_Idv}}
+\end{figure}
+
+The above figure shows that each feature in every class can have a very different distribution to other classes and to the overall sum. This is the basis for feature recognition. Given that the features vary from class to class we will be able to determine the test class. For instance in Figure \ref{fig:DistProline_Idv} class 1 clearly stands out. Hence if we test a wine whose proline exceeds 950, it will most definitely belong to class 1. Let us then see how the means and standard deviations of the features in Table \ref{tab:statAll} change when we separate the data.
+
+\begin{table}[H]
+\caption{Sample Means and Standard Dev. for each Class \label{tab:statCla}}
+\small
+\begin{center}
+\begin{tabular}{|c| c c c c|}
+\hline
+\bf Stat/RV & Alcohol & Ash & Hue & Proline \\ [0.5ex]
+\hline
+\bf Mean 1 & 13.5 & 2.50 & 1.10 & 1070 \\ [0.5ex]
+\hline
+\bf Mean 2 & 12.0 & 2.27 & 1.07 & 522 \\ [0.5ex]
+\hline
+\bf Mean 3 & 12.9 & 2.41 & 0.67 & 647 \\ [0.5ex]
+\hline
+\bf Std. 1 & 0.31 & 0.26 & 0.12 & 195 \\ [0.5ex]
+\hline
+\bf Std. 2 & 0.32 & 0.34 & 0.21 & 145 \\ [0.5ex]
+\hline
+\bf Std. 3 & 0.35 & 0.18 & 0.10 & 121 \\ [0.5ex]
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+The above table tells us for instance, that wine from class 1 has a higher alcohol contents than the other two classes. Wine from class 3 however is of different colour, meaning it could be a class of white or red wines. Finally, looking at proline concentration, we can see again, that class 1 stand out. A research paper \cite{wine} shows that Savignon Blanc and Grillo wines tend to have a much higher proline content than other wines.
+
+ 
+After dividing the data into classes and calculating their respective covariance matrices we see that those features, which used to have a relatively large covariance, are not necessarily correlated anymore. In Figure \ref{fig:covIdv}, it can be seen that features 2 and 7 for class 3 are completely unrelated.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{../results/Q1_covIdv}
+\caption{Covariance of Features 6 \& 7 and 2 \& 7  for Class 1 (blue), 2 (red) and 3 (green) Visualised \label{fig:covIdv}}
+\end{figure}
+
 \subsection{L1 and L2 Metrics}
+
+In order to determine the class of the test wines, one could employ a similarity metric. Two that belong to Minkowski's Form are L1, or Manhattan distance and L2, or Euclidean distance.
 
 \subsection{Chi-Squared and Correlation Metrics}
 
@@ -120,4 +175,15 @@ Highest positive covariance is observed for features 6 and 7 (total phenols and 
 \section{Neural Network}
 
 \section{Conclusion}
+
+\begin{thebibliography}{9}
+\bibitem{wine} 
+C. S. Ough
+\textit{Proline contents of grapes and wines}. 
+Department of Viticulture and Enology, University of California, Davis, USA
+\url{http://www.vitis-vea.de/admin/volltext/e054492.pdf}
+
+
+\end{thebibliography}
+
 \end{document}
