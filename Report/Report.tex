@@ -129,7 +129,7 @@ Highest positive covariance is observed for features 6 and 7 (total phenols and 
 \caption{PDF of Proline for Class 1 (blue), 2 (red) and 3 (green) Visualised \label{fig:DistProline_Idv}}
 \end{figure}
 
-The above figure shows that each feature in every class can have a very different distribution to other classes and to the overall sum. This is the basis for feature recognition. Given that the features vary from class to class we will be able to determine the test class. For instance in Figure \ref{fig:DistProline_Idv} class 1 clearly stands out. Hence if we test a wine whose proline exceeds 950, it will most definitely belong to class 1. Let us then see how the means and standard deviations of the features in Table \ref{tab:statAll} change when we separate the data.
+The above figure shows that each feature in every class can have a very different distribution to other classes and to the overall sum. This is the basis for feature recognition. Given that the features vary from class to class we will be able to determine the test class. For instance in Figure \ref{fig:DistProline_Idv} class 1 clearly stands out. Hence if we test a wine whose proline exceeds 900, it will most definitely belong to class 1. Let us then see how the means and standard deviations of the features in Table \ref{tab:statAll} change when we separate the data.
 
 \begin{table}
 \caption{Sample Means and Standard Dev. for each Class \label{tab:statCla}}
@@ -156,7 +156,7 @@ The above figure shows that each feature in every class can have a very differen
 \vspace{-5mm}
 \end{table}
 
-Table \ref{tab:statCla} tells us for instance, that wine from class 1 has a higher alcohol contents than the other two classes. Wine from class 3 however is of different colour, meaning it could be a class of white or red wines. Finally, looking at proline concentration, we can see again, that class 1 stand out. A research paper \cite{wine} shows that Savignon Blanc and Grillo wines tend to have a much higher proline content than other wines.
+Table \ref{tab:statCla} tells us for instance, that wine from class 1 has a higher alcohol contents than the other two classes. Wine from class 3 however is of different colour, meaning it could be a class of white or red wines. Finally, looking at proline concentration, we can see again, that class 1 stands out. A research paper \cite{wine} shows that Savignon Blanc and Grillo wines tend to have a much higher proline content than other wines, meaning this can be class of those wines.
 
  
 After dividing the data into classes and calculating their respective covariance matrices we see that those features, which used to have a relatively large covariance, are not necessarily correlated anymore. In Figure \ref{fig:covIdv}, it can be seen that features 2 and 7 for class 3 are completely unrelated.
@@ -200,6 +200,7 @@ The tests employed feature vectors of length 13 each as histograms, with the exc
 \label{fig:hist}}
 \end{figure}
 
+DISCUSS BOTH SETS OF RESULTS
 
 \subsection{Mahalanobis Distance Metric}
 
