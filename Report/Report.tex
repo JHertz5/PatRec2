@@ -77,6 +77,8 @@ Line 3\\
 
 The wine data ({\tt\small wine.csv}) provided consisted of three classes. It cis made up of 13 features representing chemical and optical information. The data can be analysed \textit{talis qualis}, however a more elaborate method is to investigate the covariance matrices. The raw data can supply us with information such as feature distribution (mean or spread), whereas covariance matrices will provide the dependency between features. This can be performed for all data altogether or for each class individually. Both methods will result in meaningful information as described in sections \ref{sec:CovAll} and \ref{sec:CovCla}. Furthermore the data was then normalised and the above was repeated.\footnote{Note that data was first separated as per instruction. Only training data is now being considered.} 
 
+\vspace{-3mm}
+
 \subsubsection{All Classes} \label{sec:CovAll}
 
 \indent \indent By investigating the data from all classes we will see that data varies altogether. We can investigate each feature and see what part of space it occupies. We can also determine how strongly all features are related to one another for all classes. Let us begin by examining the distributions of the raw data. The means of the feature distributions vary from around 0.36 for nonflavanoid phenols, through values of 1 to 3 and 10 to 100 to a single extreme at 737.1 for proline. The corresponding deviations are also quite spread out. The general trend is that the larger the mean the larger the standard deviation of the distribution. For example proline distribution has a standard deviation of 287 over 118 samples. The distributions of the features don't always seem to follow bell-shaped Gaussian distribution. However it should be noted that each distribution is in fact a sum of three independent distributions. Distribution of proline in Figure \ref{fig:DistProline} resembles a gamma distribution.
@@ -103,6 +105,8 @@ The wine data ({\tt\small wine.csv}) provided consisted of three classes. It cis
 \end{center}
 \end{table}
 
+\vspace{-5mm}
+
 Looking at the covariance matrix of the raw training data we can see that proline covary with all other features quite strongly. This is however due to the fact that proline's distribution has a naturally high variance, thus corrupting the readings. The highest covariance for two different features excluding proline is that of magnesium (feature 5) and colour intensity (feature 10). However, these two features have second and third highest variance distributions. We have to therefore look at the covariance matrix of the normalised feature vectors.
 
 Highest positive covariance is observed for features 6 and 7 (total phenols and flavonoids), whereas the most negative covariance is found for features 2 and 7 (malic acid and flavonoids). The plot of the above cases is shown in Figure \ref{fig:covAll}. This tells us that there is possibly some correlation between the features, e.g. increasing the phenols count increases the number of flavonoids in wine. This does in fact hold in real world, as flavonoids are a subset of natural phenols.
@@ -112,6 +116,8 @@ Highest positive covariance is observed for features 6 and 7 (total phenols and 
 \includegraphics[width=0.5\textwidth]{../results/Q1_covAll}
 \caption{Covariance of Features 6 \& 7 and 2 \& 7 Visualised \label{fig:covAll}}
 \end{figure}
+
+\vspace{-5mm}
 
 \subsubsection{Individual Classes} \label{sec:CovCla}
 
@@ -125,7 +131,7 @@ Highest positive covariance is observed for features 6 and 7 (total phenols and 
 
 The above figure shows that each feature in every class can have a very different distribution to other classes and to the overall sum. This is the basis for feature recognition. Given that the features vary from class to class we will be able to determine the test class. For instance in Figure \ref{fig:DistProline_Idv} class 1 clearly stands out. Hence if we test a wine whose proline exceeds 950, it will most definitely belong to class 1. Let us then see how the means and standard deviations of the features in Table \ref{tab:statAll} change when we separate the data.
 
-\begin{table}[H]
+\begin{table}
 \caption{Sample Means and Standard Dev. for each Class \label{tab:statCla}}
 \small
 \begin{center}
@@ -147,9 +153,10 @@ The above figure shows that each feature in every class can have a very differen
 \hline
 \end{tabular}
 \end{center}
+\vspace{-5mm}
 \end{table}
 
-The above table tells us for instance, that wine from class 1 has a higher alcohol contents than the other two classes. Wine from class 3 however is of different colour, meaning it could be a class of white or red wines. Finally, looking at proline concentration, we can see again, that class 1 stand out. A research paper \cite{wine} shows that Savignon Blanc and Grillo wines tend to have a much higher proline content than other wines.
+Table \ref{tab:statCla} tells us for instance, that wine from class 1 has a higher alcohol contents than the other two classes. Wine from class 3 however is of different colour, meaning it could be a class of white or red wines. Finally, looking at proline concentration, we can see again, that class 1 stand out. A research paper \cite{wine} shows that Savignon Blanc and Grillo wines tend to have a much higher proline content than other wines.
 
  
 After dividing the data into classes and calculating their respective covariance matrices we see that those features, which used to have a relatively large covariance, are not necessarily correlated anymore. In Figure \ref{fig:covIdv}, it can be seen that features 2 and 7 for class 3 are completely unrelated.
@@ -181,6 +188,8 @@ In the table below we have summarised the results of the above metric and also h
 \end{tabular}
 \end{center}
 \end{table}
+
+\vspace{-5mm}
 
 The tests employed feature vectors of length 13 each as histograms, with the exception of histogram intersection. In this particular case we have used all of the training data and converted it into 3 histograms - one for each class. Then by transforming each test wine into a histogram with identical bin positions we performed the histogram intersection. We have then varied the number of bins and plotted the resulting accuracy curve. This is shown in Figure \ref{fig:hist}.
 
