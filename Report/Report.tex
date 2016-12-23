@@ -160,13 +160,37 @@ After dividing the data into classes and calculating their respective covariance
 \caption{Covariance of Features 6 \& 7 and 2 \& 7  for Class 1 (blue), 2 (red) and 3 (green) Visualised \label{fig:covIdv}}
 \end{figure}
 
-\subsection{L1 and L2 Metrics}
+\subsection{L1, L2 , Chi-Squared, Histogram Intersection, Correlation Metrics}
 
-In order to determine the class of the test wines, one could employ a similarity metric. Two that belong to Minkowski's Form are L1, or Manhattan distance and L2, or Euclidean distance.
+In order to assign class to a test wine, we need to employ some similarity measure. The simplest belong to Minkowski's Form - L1 and L2. They measure the Manhattan and Euclidean distances respectively. A more complex is to measure the chi-squared distance, which corrects the L2 metric by taking into account the absolute positions of the points in space. Hence if points have relatively large coordinates, the "hit" is allowed to be further away. Similarly, if a point of consideration has relatively small coordinates, then the match must be more precise in order to be classified as a hit. For instance an L1 metric of points $(100,0)$, $(60,0)$ and $(50,0)$, $(10,0)$ would yield 40 for both. However chi-squared distance is 5.05 and 13.7 respectively, meaning even though the two sets of points are equally spaced, the first pair is more likely to be a hit.
 
-\subsection{Chi-Squared and Correlation Metrics}
+In the table below we have summarised the results of the above metric and also histogram intersection and correlation measure. Each metric was used for raw and normalised data.
 
-\subsection{Histogram Intersection Metric}
+\begin{table}[H]
+\caption{Miss Rates for Various Metrics and Data Form \label{tab:MissMetric}}
+\small
+\begin{center}
+\begin{tabular}{|c| c c c c c|}
+\hline
+\bf Metric & L1 & L2 & Chi-Sq. &  Hist. & Corr. \\ [0.5ex]
+\hline
+\bf Miss Raw & 15\% &20\%  & 10\% & 17.5\% & 20\% \\ [0.5ex]
+\hline
+\bf Miss Norm & 10\% & 12.5\% & 5\% & 25\% & 10\% \\ [0.5ex]
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+The tests employed feature vectors of length 13 each as histograms, with the exception of histogram intersection. In this particular case we have used all of the training data and converted it into 3 histograms - one for each class. Then by transforming each test wine into a histogram with identical bin positions we performed the histogram intersection. We have then varied the number of bins and plotted the resulting accuracy curve. This is shown in Figure \ref{fig:hist}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{../results/Q1D_Hist}
+\caption{Plots of Hit Rate against Number of Bins for Raw and Normalised Data
+\label{fig:hist}}
+\end{figure}
+
 
 \subsection{Mahalanobis Distance Metric}
 

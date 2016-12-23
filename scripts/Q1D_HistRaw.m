@@ -2,7 +2,7 @@
 
 clc
 clear all
-close all
+%close all
 
 %add data directory to path
 if contains(pwd, 'NotPatRecCW2')
@@ -98,13 +98,15 @@ end
 filacc = filter(0.167*[1 1 1 1 1 1],[1],acc);
 
 figure(1)
+subplot(1,2,1)
 plot(1:hh,acc,'linewidth',2)
 hold all
 plot(-2:(hh-3),filacc,'linewidth',2)
-title('Accuracy of Histogram Intersection Classification Method (RAW)')
-xlabel('Number of histogram bins')
-ylabel('Accuracy [%]')
-set(gca,'fontsize',20)
+set(gca,'fontsize',15)
+title('Accuracy of Histogram Union (RAW)','interpreter','latex','fontsize',30)
+xlabel('Number of histogram bins','interpreter','latex','fontsize',30)
+ylabel('Accuracy [\%]','interpreter','latex','fontsize',30)
 xlim([0 hh])
 grid on
 grid minor
+set(gca,'linewidth',1.5)

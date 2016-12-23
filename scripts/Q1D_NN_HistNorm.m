@@ -132,13 +132,16 @@ end
 
 filacc = filter(0.167*[1 1 1 1 1 1],[1],acc);
 figure(1)
+subplot(1,2,2)
 plot(1:kk,acc,'linewidth',2)
 hold all
 plot(-2:(kk-3),filacc,'linewidth',2)
-title('Accuracy of Histogram Intersection Classification Method (NORM)')
-xlabel('Number of histogram bins')
-ylabel('Accuracy [%]')
-set(gca,'fontsize',20)
+set(gca,'fontsize',15)
+title('Accuracy of Histogram Union (NORM)','interpreter','latex','fontsize',30)
+xlabel('Number of histogram bins','interpreter','latex','fontsize',30)
+ylabel('Accuracy [\%]','interpreter','latex','fontsize',30)
 xlim([0 kk])
 grid on
 grid minor
+set(gca,'linewidth',1.5)
+
