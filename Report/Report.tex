@@ -200,7 +200,13 @@ The tests employed feature vectors of length 13 each as histograms, with the exc
 \label{fig:hist}}
 \end{figure}
 
-Following from Table \ref{tab:MissMetric} it can be deduced that Chi-Squared metric produces best results for both sets of data - raw and normalised. It is however surprising that L1 has produced results more accurate than L2 in either case. It is said \cite{L1L2} that L2 theoretically is superior over L1 as it preserves the distance energy. However, the same source reports that there are practical situations when L1 might be better, such as when there are outliers. L1 is reported to be more robust when class occupies the space quite sparsely. In this experiment we have employed the Nearest Neighbour method. Hence the class spread is unimportant. Thus the superiority of L1 over L2 possibly comes to this particular set of training and testing data.
+Following from Table \ref{tab:MissMetric} it can be deduced that Chi-Squared metric produces best results for both sets of data - raw and normalised. It is however surprising that L1 has produced results more accurate than L2 in either case. It is said \cite{L1L2} that L2 theoretically is superior over L1 as it preserves the distance energy. However, the same source reports that there are practical situations when L1 might be better, such as when there are outliers. L1 is reported to be more robust when class occupies the space quite sparsely. In this experiment we have employed the Nearest Neighbour method. Hence the class spread is unimportant. Thus the superiority of L1 over L2 possibly comes from this particular set of training and testing data.
+
+Comparatively L1, L2 and Corss Correlation metrics are very similar, each producing wrong classifications 10 to 20\% of the time. Cross Correlation defined as a square of the Euclidean distance, is supposed to be more robust to outliers as well. The results should not be too different from L2 metric as they are related by a square root. 
+
+There is a general trend that metrics produce better results when the data is normalised. This is with exception of Histogram Intersection, as seen in Figure \ref{fig:hist}. The accuracy of that metric varies with number of bins. In both cases, the graphs peak at around 13 to 15 bins, which agrees with the feature size - 13.
+For normalised data, the trend is decreasing. For raw data, on the other hand, the trend varies, with its local minimum at around 68 bins. 
+
 \subsection{Mahalanobis Distance Metric}
 
 \section{K-means Clustering}
