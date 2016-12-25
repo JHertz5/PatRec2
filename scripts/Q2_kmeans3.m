@@ -16,9 +16,15 @@ end
 
 %load norm data
 load wine_separatedData.mat
-plotfigs = 0;
+plotfigs = 1;
 
-for hh = 1:1000
+if plotfigs == 1
+    maxIter = 1;
+else
+    maxIter = 1000;
+end
+
+for hh = 1:maxIter
     %% clustering using scityblock
     
     [idx,C] = kmeans(training_norm,3,'distance','cityblock');
@@ -49,29 +55,6 @@ for hh = 1:1000
     [~, id] = max(hb);
     
     cl(3) = id;
-    
-    if plotfigs == 1
-        figure(1)
-        plot(training_norm(idx==1,6),training_norm(idx==1,7),'r.','MarkerSize',12)
-        hold all
-        plot(training_norm(idx==2,6),training_norm(idx==2,7),'b.','MarkerSize',12)
-        plot(training_norm(idx==3,6),training_norm(idx==3,7),'g.','MarkerSize',12)
-        plot(C(1,6),C(1,7),'mx',...
-            'MarkerSize',15,'LineWidth',3)
-        plot(C(2,6),C(2,7),'kx',...
-            'MarkerSize',15,'LineWidth',3)
-        plot(C(3,6),C(3,7),'cx',...
-            'MarkerSize',15,'LineWidth',3)
-        grid on
-        grid minor
-        set(gca,'linewidth',1.5,'fontsize',15)
-        title('3 Means Clustering','fontsize',30,'interpreter','latex')
-        xlabel('Feature 6','fontsize',30,'interpreter','latex')
-        ylabel('Feature 7','fontsize',30,'interpreter','latex')
-        
-        legend('Cluster 1','Cluster 2','Cluster 3','Centroid 1','Centroid 2','Centroid 3',...
-            'Location','NW')
-    end
     
     %
     %
@@ -221,6 +204,45 @@ for hh = 1:1000
     [hb,nb] = hist(training_classes(clus3),bins);
     [~, id] = max(hb);
     
+     if plotfigs == 1
+        featx = 6;
+        featy = 7;
+        
+        figure(1)
+        subplot(1,2,1)
+        plot(training_norm(find(training_classes == 1),featx),training_norm(find(training_classes == 1),featy),'r.','MarkerSize',20)
+        hold all
+        plot(training_norm(find(training_classes == 2),featx),training_norm(find(training_classes == 2),featy),'b.','MarkerSize',20)
+        plot(training_norm(find(training_classes == 3),featx),training_norm(find(training_classes == 3),featy),'g.','MarkerSize',20)
+        plot(C(:,featx),C(:,featy),'kx',...
+            'MarkerSize',25,'LineWidth',3)
+        grid on
+        grid minor
+        set(gca,'linewidth',1.5,'fontsize',15)
+        title('Original Data Partition','fontsize',30,'interpreter','latex')
+        xlabel('Feature 6','fontsize',30,'interpreter','latex')
+        ylabel('Feature 7','fontsize',30,'interpreter','latex')
+        
+        legend('Class 1','Class 2','Class 3','Centroids',...
+            'Location','NW')
+        axis tight
+        subplot(1,2,2)
+        plot(training_norm(find(idx==1),featx),training_norm(find(idx==1),featy),'r.','MarkerSize',20)
+        hold all
+        plot(training_norm(find(idx==2),featx),training_norm(find(idx==2),featy),'b.','MarkerSize',20)
+        plot(training_norm(find(idx==3),featx),training_norm(find(idx==3),featy),'g.','MarkerSize',20)
+        plot(C(:,featx),C(:,featy),'kx',...
+            'MarkerSize',25,'LineWidth',3)
+        grid on
+        grid minor
+        set(gca,'linewidth',1.5,'fontsize',15)
+        title('3 Means Clustering','fontsize',30,'interpreter','latex')
+        xlabel('Feature 6','fontsize',30,'interpreter','latex')
+        ylabel('Feature 7','fontsize',30,'interpreter','latex')
+        axis tight
+        legend('Cluster 1','Cluster 2','Cluster 3','Centroids',...
+            'Location','NW')
+    end
     
     %
     %
@@ -373,6 +395,7 @@ for hh = 1:1000
     cl(3) = id;
     
     
+    
     %
     %
     % L1 DIST
@@ -522,6 +545,8 @@ for hh = 1:1000
     [~, id] = max(hb);
     
     cl(3) = id;
+    
+    
     
     
     %
