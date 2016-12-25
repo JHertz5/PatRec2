@@ -211,6 +211,38 @@ For normalised data, the trend is decreasing. For raw data, on the other hand, t
 
 \section{K-means Clustering}
 
+In order to implement k-means clustering Matlab functions {\tt\small kmeans} and {\tt\small knnsearch} were used. The first test for $k=3$ involved normalised training and testing data. For clustering the following metrics were used: L1, L2, cosine and cross correlation.
+For classification the following metrics were used: L1, L2, Cross Correlation, Chi-Squared, and Histogram Intersection. The accuracy results (hit rate) are reported in Table \ref{tab:kmeans3}.
+
+Note that {\tt\small kmeans} function does not produce the same results every time, since the algorithm beings by placing the centres at arbitrary points in space. Hence they converge to different location most of the time. Thus in order to assess the performance each combination of kmeans and kNN algorithms was run 1000 times and average result has been calculated.
+
+
+\begin{table}[H]
+\caption{Mean accuracy of k-means clustering and kNN classification \label{tab:kmeans3}}
+\small
+\begin{center}
+\begin{tabular}{|c| c c c c|}
+\cline{2-5}
+\multicolumn{1}{c|}{ } & \multicolumn{4}{|c|}{\bf Kmeans Clustering, k = 3} \\
+\hline
+
+\bf kNN &\bf L1 &\bf L2 &\bf Cos &\bf Corr \\ [0.5ex]
+\hline
+\bf L1 & 84.08\% & 67.39\%  & 27.50\% & 43.49\%\\ [0.5ex]
+\hline
+\bf L2 & 87.78\% & 68.83\%  & 84.14\% & 69.41\%\\ [0.5ex]
+\hline
+\bf Corr. & 81.53\% & 66.27\%  & 82.00\% & 84.83\%\\ [0.5ex]
+\hline
+\bf Chi-Sq & 86.47\% & 68.80\%  & 69.42\% & 17.25\%\\ [0.5ex]
+\hline
+\bf Hist. & 62.25\% & 53.27\%  & 37.89\% & 43.49\%\\ [0.5ex]
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
 \section{Neural Network}
 
 \section{Conclusion}
