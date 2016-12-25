@@ -28,12 +28,11 @@ end
 for hh = 1:maxIter
     %% clustering using scityblock
     
-    [idx,C] = kmeans(training_norm,3,'distance','cityblock');
+    [idx,C] = kmeans(training_norm,10,'distance','cityblock');
     
-    clus1 = find(idx == 1);
-    clus2 = find(idx == 2);
-    clus3 = find(idx == 3);
-    
+    for i =1:10
+        clus{i} = find(idx == i);
+    end
     % assign class labels to C
     bins = 0.5:1:3.5;
     
@@ -41,21 +40,12 @@ for hh = 1:maxIter
     class2 = find(testing_classes == 2);
     class3 = find(testing_classes == 3);
     
-    
-    [hb,nb] = hist(training_classes(clus1),bins);
-    [~, id] = max(hb);
-    
-    cl(1) = id;
-    
-    [hb,nb] = hist(training_classes(clus2),bins);
-    [~, id] = max(hb);
-    
-    cl(2) = id;
-    
-    [hb,nb] = hist(training_classes(clus3),bins);
-    [~, id] = max(hb);
-    
-    cl(3) = id;
+    for i = 1:10
+        [hb,nb] = hist(training_classes(clus{i}),bins);
+        [~, id] = max(hb);
+        
+        cl(i) = id;
+    end
     
     %
     %
@@ -66,14 +56,7 @@ for hh = 1:maxIter
     IDX1 = knnsearch(C,testing_norm,'distance','cityblock');
     
     for i = 1:length(IDX1)
-        switch IDX1(i)
-            case 1
-                IDX1(i) = cl(1);
-            case 2
-                IDX1(i) = cl(2);
-            case 3
-                IDX1(i) = cl(3);
-        end
+        IDX1(i) = cl(IDX1(i));
     end
     
     k3acc1(1,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
@@ -87,14 +70,7 @@ for hh = 1:maxIter
     IDX2 = knnsearch(C,testing_norm,'distance','euclidean');
     
     for i = 1:length(IDX2)
-        switch IDX2(i)
-            case 1
-                IDX2(i) = cl(1);
-            case 2
-                IDX2(i) = cl(2);
-            case 3
-                IDX2(i) = cl(3);
-        end
+        IDX2(i) = cl(IDX2(i));
     end
     
     k3acc2(1,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
@@ -108,14 +84,7 @@ for hh = 1:maxIter
     IDX3 = knnsearch(C,testing_norm,'distance','correlation');
     
     for i = 1:length(IDX3)
-        switch IDX3(i)
-            case 1
-                IDX3(i) = cl(1);
-            case 2
-                IDX3(i) = cl(2);
-            case 3
-                IDX3(i) = cl(3);
-        end
+        IDX3(i) = cl(IDX3(i));
     end
     
     k3acc3(1,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
@@ -135,14 +104,7 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(IDX4)
-        switch IDX4(i)
-            case 1
-                IDX4(i) = cl(1);
-            case 2
-                IDX4(i) = cl(2);
-            case 3
-                IDX4(i) = cl(3);
-        end
+        IDX4(i) = cl(IDX4(i));
     end
     
     k3acc4(1,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
@@ -164,14 +126,7 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(IDX5)
-        switch IDX5(i)
-            case 1
-                IDX5(i) = cl(1);
-            case 2
-                IDX5(i) = cl(2);
-            case 3
-                IDX5(i) = cl(3);
-        end
+        IDX5(i) = cl(IDX5(i));
     end
     
     k3acc5(1,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
@@ -193,26 +148,19 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(testing_norm)
-        switch min(w(:,i))
-            case w(1,i)
-                IDX6(i) = cl(1);
-            case w(2,i)
-                IDX6(i) = cl(2);
-            case w(3,i)
-                IDX6(i) = cl(3);
-        end
+        [val,kk] = min(w(:,i));
+        IDX6(i) = cl(kk);
     end
     
     k3acc6(1,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
     
     %% clustering using cityblock (L1)
     
-    [idx,C] = kmeans(training_norm,3);
+    [idx,C] = kmeans(training_norm,10);
     
-    clus1 = find(idx == 1);
-    clus2 = find(idx == 2);
-    clus3 = find(idx == 3);
-    
+    for i =1:10
+        clus{i} = find(idx == i);
+    end
     % assign class labels to C
     bins = 0.5:1:3.5;
     
@@ -220,19 +168,12 @@ for hh = 1:maxIter
     class2 = find(testing_classes == 2);
     class3 = find(testing_classes == 3);
     
-    
-    [hb,nb] = hist(training_classes(clus1),bins);
-    [~, id] = max(hb);
-    
-    cl(1) = id;
-    
-    [hb,nb] = hist(training_classes(clus2),bins);
-    [~, id] = max(hb);
-    
-    cl(2) = id;
-    
-    [hb,nb] = hist(training_classes(clus3),bins);
-    [~, id] = max(hb);
+    for i = 1:10
+        [hb,nb] = hist(training_classes(clus{i}),bins);
+        [~, id] = max(hb);
+        
+        cl(i) = id;
+    end
     
     if plotfigs == 1
         featx = 6;
@@ -283,14 +224,7 @@ for hh = 1:maxIter
     IDX1 = knnsearch(C,testing_norm,'distance','cityblock');
     
     for i = 1:length(IDX1)
-        switch IDX1(i)
-            case 1
-                IDX1(i) = cl(1);
-            case 2
-                IDX1(i) = cl(2);
-            case 3
-                IDX1(i) = cl(3);
-        end
+        IDX1(i) = cl(IDX1(i));
     end
     
     k3acc1(2,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
@@ -304,14 +238,7 @@ for hh = 1:maxIter
     IDX2 = knnsearch(C,testing_norm,'distance','euclidean');
     
     for i = 1:length(IDX2)
-        switch IDX2(i)
-            case 1
-                IDX2(i) = cl(1);
-            case 2
-                IDX2(i) = cl(2);
-            case 3
-                IDX2(i) = cl(3);
-        end
+        IDX2(i) = cl(IDX2(i));
     end
     
     k3acc2(2,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
@@ -325,14 +252,7 @@ for hh = 1:maxIter
     IDX3 = knnsearch(C,testing_norm,'distance','correlation');
     
     for i = 1:length(IDX3)
-        switch IDX3(i)
-            case 1
-                IDX3(i) = cl(1);
-            case 2
-                IDX3(i) = cl(2);
-            case 3
-                IDX3(i) = cl(3);
-        end
+        IDX3(i) = cl(IDX3(i));
     end
     
     k3acc3(2,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
@@ -352,14 +272,7 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(IDX4)
-        switch IDX4(i)
-            case 1
-                IDX4(i) = cl(1);
-            case 2
-                IDX4(i) = cl(2);
-            case 3
-                IDX4(i) = cl(3);
-        end
+        IDX4(i) = cl(IDX4(i));
     end
     
     k3acc4(2,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
@@ -381,14 +294,7 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(IDX5)
-        switch IDX5(i)
-            case 1
-                IDX5(i) = cl(1);
-            case 2
-                IDX5(i) = cl(2);
-            case 3
-                IDX5(i) = cl(3);
-        end
+        IDX5(i) = cl(IDX5(i));
     end
     
     k3acc5(2,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
@@ -410,26 +316,19 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(testing_norm)
-        switch min(w(:,i))
-            case w(1,i)
-                IDX6(i) = cl(1);
-            case w(2,i)
-                IDX6(i) = cl(2);
-            case w(3,i)
-                IDX6(i) = cl(3);
-        end
+        [val,kk] = min(w(:,i));
+        IDX6(i) = cl(kk);
     end
     
     k3acc6(2,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
     
     %% clustering using cosine
     
-    [idx,C] = kmeans(training_norm,3,'distance','cosine');
+    [idx,C] = kmeans(training_norm,10,'distance','cosine');
     
-    clus1 = find(idx == 1);
-    clus2 = find(idx == 2);
-    clus3 = find(idx == 3);
-    
+    for i =1:10
+        clus{i} = find(idx == i);
+    end
     % assign class labels to C
     bins = 0.5:1:3.5;
     
@@ -437,21 +336,12 @@ for hh = 1:maxIter
     class2 = find(testing_classes == 2);
     class3 = find(testing_classes == 3);
     
-    
-    [hb,nb] = hist(training_classes(clus1),bins);
-    [~, id] = max(hb);
-    
-    cl(1) = id;
-    
-    [hb,nb] = hist(training_classes(clus2),bins);
-    [~, id] = max(hb);
-    
-    cl(2) = id;
-    
-    [hb,nb] = hist(training_classes(clus3),bins);
-    [~, id] = max(hb);
-    
-    cl(3) = id;
+    for i = 1:10
+        [hb,nb] = hist(training_classes(clus{i}),bins);
+        [~, id] = max(hb);
+        
+        cl(i) = id;
+    end
     
     %
     %
@@ -462,14 +352,7 @@ for hh = 1:maxIter
     IDX1 = knnsearch(C,testing_norm,'distance','cityblock');
     
     for i = 1:length(IDX1)
-        switch IDX1(i)
-            case 1
-                IDX1(i) = cl(1);
-            case 2
-                IDX1(i) = cl(2);
-            case 3
-                IDX1(i) = cl(3);
-        end
+        IDX1(i) = cl(IDX1(i));
     end
     
     k3acc1(3,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
@@ -483,14 +366,7 @@ for hh = 1:maxIter
     IDX2 = knnsearch(C,testing_norm,'distance','euclidean');
     
     for i = 1:length(IDX2)
-        switch IDX2(i)
-            case 1
-                IDX2(i) = cl(1);
-            case 2
-                IDX2(i) = cl(2);
-            case 3
-                IDX2(i) = cl(3);
-        end
+        IDX2(i) = cl(IDX2(i));
     end
     
     k3acc2(3,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
@@ -504,14 +380,7 @@ for hh = 1:maxIter
     IDX3 = knnsearch(C,testing_norm,'distance','correlation');
     
     for i = 1:length(IDX3)
-        switch IDX3(i)
-            case 1
-                IDX3(i) = cl(1);
-            case 2
-                IDX3(i) = cl(2);
-            case 3
-                IDX3(i) = cl(3);
-        end
+        IDX3(i) = cl(IDX3(i));
     end
     
     k3acc3(3,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
@@ -531,14 +400,7 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(IDX4)
-        switch IDX4(i)
-            case 1
-                IDX4(i) = cl(1);
-            case 2
-                IDX4(i) = cl(2);
-            case 3
-                IDX4(i) = cl(3);
-        end
+        IDX4(i) = cl(IDX4(i));
     end
     
     k3acc4(3,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
@@ -560,14 +422,7 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(IDX5)
-        switch IDX5(i)
-            case 1
-                IDX5(i) = cl(1);
-            case 2
-                IDX5(i) = cl(2);
-            case 3
-                IDX5(i) = cl(3);
-        end
+        IDX5(i) = cl(IDX5(i));
     end
     
     k3acc5(3,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
@@ -589,26 +444,19 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(testing_norm)
-        switch min(w(:,i))
-            case w(1,i)
-                IDX6(i) = cl(1);
-            case w(2,i)
-                IDX6(i) = cl(2);
-            case w(3,i)
-                IDX6(i) = cl(3);
-        end
+        [val,kk] = min(w(:,i));
+        IDX6(i) = cl(kk);
     end
     
     k3acc6(3,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
     
     %% clustering using correlation
     
-    [idx,C] = kmeans(training_norm,3,'distance','correlation');
+    [idx,C] = kmeans(training_norm,10,'distance','correlation');
     
-    clus1 = find(idx == 1);
-    clus2 = find(idx == 2);
-    clus3 = find(idx == 3);
-    
+    for i =1:10
+        clus{i} = find(idx == i);
+    end
     % assign class labels to C
     bins = 0.5:1:3.5;
     
@@ -616,21 +464,12 @@ for hh = 1:maxIter
     class2 = find(testing_classes == 2);
     class3 = find(testing_classes == 3);
     
-    
-    [hb,nb] = hist(training_classes(clus1),bins);
-    [~, id] = max(hb);
-    
-    cl(1) = id;
-    
-    [hb,nb] = hist(training_classes(clus2),bins);
-    [~, id] = max(hb);
-    
-    cl(2) = id;
-    
-    [hb,nb] = hist(training_classes(clus3),bins);
-    [~, id] = max(hb);
-    
-    cl(3) = id;
+    for i = 1:10
+        [hb,nb] = hist(training_classes(clus{i}),bins);
+        [~, id] = max(hb);
+        
+        cl(i) = id;
+    end
     
     %
     %
@@ -641,14 +480,7 @@ for hh = 1:maxIter
     IDX1 = knnsearch(C,testing_norm,'distance','cityblock');
     
     for i = 1:length(IDX1)
-        switch IDX1(i)
-            case 1
-                IDX1(i) = cl(1);
-            case 2
-                IDX1(i) = cl(2);
-            case 3
-                IDX1(i) = cl(3);
-        end
+        IDX1(i) = cl(IDX1(i));
     end
     
     k3acc1(4,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
@@ -662,14 +494,7 @@ for hh = 1:maxIter
     IDX2 = knnsearch(C,testing_norm,'distance','euclidean');
     
     for i = 1:length(IDX2)
-        switch IDX2(i)
-            case 1
-                IDX2(i) = cl(1);
-            case 2
-                IDX2(i) = cl(2);
-            case 3
-                IDX2(i) = cl(3);
-        end
+        IDX2(i) = cl(IDX2(i));
     end
     
     k3acc2(4,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
@@ -683,14 +508,7 @@ for hh = 1:maxIter
     IDX3 = knnsearch(C,testing_norm,'distance','correlation');
     
     for i = 1:length(IDX3)
-        switch IDX3(i)
-            case 1
-                IDX3(i) = cl(1);
-            case 2
-                IDX3(i) = cl(2);
-            case 3
-                IDX3(i) = cl(3);
-        end
+        IDX3(i) = cl(IDX3(i));
     end
     
     k3acc3(4,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
@@ -710,14 +528,7 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(IDX4)
-        switch IDX4(i)
-            case 1
-                IDX4(i) = cl(1);
-            case 2
-                IDX4(i) = cl(2);
-            case 3
-                IDX4(i) = cl(3);
-        end
+        IDX4(i) = cl(IDX4(i));
     end
     
     k3acc4(4,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
@@ -739,14 +550,7 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(IDX5)
-        switch IDX5(i)
-            case 1
-                IDX5(i) = cl(1);
-            case 2
-                IDX5(i) = cl(2);
-            case 3
-                IDX5(i) = cl(3);
-        end
+        IDX5(i) = cl(IDX5(i));
     end
     
     k3acc5(4,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
@@ -768,14 +572,8 @@ for hh = 1:maxIter
     end
     
     for i = 1:length(testing_norm)
-        switch min(w(:,i))
-            case w(1,i)
-                IDX6(i) = cl(1);
-            case w(2,i)
-                IDX6(i) = cl(2);
-            case w(3,i)
-                IDX6(i) = cl(3);
-        end
+        [val,kk] = min(w(:,i));
+        IDX6(i) = cl(kk);
     end
     
     k3acc6(4,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;

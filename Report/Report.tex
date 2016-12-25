@@ -210,7 +210,7 @@ For normalised data, the trend is decreasing. For raw data, on the other hand, t
 \subsection{Mahalanobis Distance Metric}
 
 \section{K-means Clustering}
-
+\subsection{k = 3 Clusters}
 In order to implement k-means clustering Matlab functions {\tt\small kmeans} and {\tt\small knnsearch} were used. The first test for $k=3$ involved normalised training and testing data. For clustering the following metrics were used: L1, L2, cosine and cross correlation.
 For classification the following metrics were used: L1, L2, Cross Correlation, Chi-Squared, and Histogram Intersection. The accuracy results (hit rate) are reported in Table \ref{tab:kmeans3}.
 
@@ -226,7 +226,7 @@ Note that {\tt\small kmeans} function does not produce the same results every ti
 \multicolumn{1}{c|}{ } & \multicolumn{4}{|c|}{\bf Kmeans Clustering, k = 3} \\
 \hline
 
-\bf kNN &\bf L1 &\bf L2 &\bf Cos &\bf Corr \\ [0.5ex]
+\bf kNN &\bf L1 &\bf L2 &\bf Cosine &\bf Corr \\ [0.5ex]
 \hline
 \bf L1 & 84.08\% & 67.39\%  & 27.50\% & 43.49\%\\ [0.5ex]
 \hline
@@ -242,6 +242,8 @@ Note that {\tt\small kmeans} function does not produce the same results every ti
 \end{center}
 \end{table}
 
+\hl{ADD MAXIMUM VALUES AS WELL}
+
 An example of kmeans clustering is shown in Figure \ref{fig:clusFig}. In this example \textit{cityblock} or Minkowski form distance with $p=1$ was used. It can be seen comparing left and right images that that some point were assigned to the wrong class.
 
 \begin{figure}[H]
@@ -251,7 +253,37 @@ An example of kmeans clustering is shown in Figure \ref{fig:clusFig}. In this ex
 \label{fig:clusFig}}
 \end{figure}
  
+\hl{COMMENT + MAHAL}
  
+\subsection{k = 10 Clusters}
+
+\begin{table}[H]
+
+\caption{Mean accuracy of k-means clustering and kNN classification \label{tab:kmeans3}}
+\small
+\begin{center}
+\begin{tabular}{|c| c c c c|}
+\cline{2-5}
+\multicolumn{1}{c|}{ } & \multicolumn{4}{|c|}{\bf Kmeans Clustering, k = 10} \\
+\hline
+
+\bf kNN &\bf L1 &\bf L2 &\bf Cosine &\bf Corr \\ [0.5ex]
+\hline
+\bf L1 & 88.07\% & 87.09\%  & 32.59\% & 51.26\%\\ [0.5ex]
+\hline
+\bf L2 & 87.19\% & 85.98\%  & 82.36\% & 62.10\%\\ [0.5ex]
+\hline
+\bf Corr. & 85.85\% & 84.13\%  & 85.50\% & 85.61\%\\ [0.5ex]
+\hline
+\bf Chi-Sq & 88.18\% & 87.02\%  & 64.11\% & 30.48\%\\ [0.5ex]
+\hline
+\bf Hist. & 65.45\% & 70.12\%  & 38.44\% & 51.26\%\\ [0.5ex]
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+\hl{ADD MAXIMUM VALUES AS WELL}
+
 \section{Neural Network}
 
 \section{Conclusion}
