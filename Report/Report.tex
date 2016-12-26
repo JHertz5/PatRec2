@@ -380,7 +380,7 @@ $\downarrow$\\
 
 Having run the network for all of the above hidden layer sizes thirty times, the mean accuracy for each layer size has been plotted (Figure \ref{fig:HidSiz}).
 
-It can be seen that the graph quickly converges to value of roughly 80\% and oscillates around it. In fact it only requires a hidden layer size of 4 to produce hit rate of 79.92\%. When hidden layer is 26, i.e. the recommended starting value, the mean hit rate drops to around 79.46\%.
+It can be seen that the graph quickly converges to value of roughly 80\% and oscillates around it. In fact it only requires a hidden layer size of 4 to produce hit rate of 79.92\%. When hidden layer is 26, i.e. the recommended starting value, the mean hit rate drops to around 79.46\%. Over the domain from 3 to 30 the accuracy of the Neural Network is relatively constant, deviating by approximately 0.15 from the mean. Thus to maximise time efficiency whilst maintaining accuracy we can use a hidden layer size of 6. We could use 4 or 5, however they are small enough that sometimes they can produce lower hit rates. Size of 6 produces therefore more repeatable results.
 
 \begin{figure}[H]
 \centering
@@ -391,8 +391,49 @@ It can be seen that the graph quickly converges to value of roughly 80\% and osc
 
 \subsection{Number of Hidden Layers}
 
+We then look at how many hidden layers should we use. Source \cite{NN_Java} reports that most problems do not require more than 1 hidden layer. Thus is examined in this section.
+
+Having kept the hidden layer size constant at 10, their number was varied from 1 to 10. This resulted in the following network being created. Each network was run 7 times and average mean has been plotted in Figure \ref{fig:HidNum}.
+
+\begin{center}
+\framebox[1.3\width]{\tiny \bf INPUT LAYER (13)} \\
+
+\centering
+$\downarrow$ \\
+\bf ... \\
+{\bf  \tiny UP TO $\times 30$}\\
+\centering
+\framebox[1.3\width]{\tiny \bf SINGLE HIDDEN LAYER (10)}\\
+
+\centering
+\bf ... \\
+$\downarrow$\\
+
+\centering
+\framebox[1.3\width]{\tiny \bf OUTPUT LAYER (3)}\\
+
+\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{../results/NN_HiddenLayerNum}
+\caption{Performance vs. Varying Number of Hidden Layers
+\label{fig:HidNum}}
+\end{figure}
+
+We can clearly see that as the number of hidden layers ($numHid$) increases the accuracy drops significantly. Although a peak can be observed at 8 layers, a more reasonable choice would be 3. This is because that the trend after $numHid = 4$ is strictly decreasing until $numHid = 25$. The choice of selecting $numHid = 3$ has also been influenced by the overall time performance of the algorithm.
 \subsection{Combined}
 
+Having identified the optimal number of hidden layers and their size independently, we shall investigate how they combine together. In order to achieve that, we have varied both the hidden layer size and number. Each was varied between 1 and 10. The experiment was repeated three times and mean accuracy was calculated. The resulting graph is shown in Figure \ref{fig:NNSizeNum}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{../results/NN_HidLay_Num_Size2}
+\caption{Performance vs. Hidden Layer Number (HLN) vs. Size of Hidden Layer (SHL). Colour scale represents accuracy rate.
+\label{fig:NNSizeNum}}
+\end{figure}
+
+We can see a clear diagonal line dividing the graph between the very accurate and less accurate results. The triangle of high accuracy is defined for $SHL > HLN \quad \forall SHL, HLN \leq 10$ with its peak at $SHL = 9$ and $HLN = 3$.
 \section{Conclusion}
 
 \begin{thebibliography}{9}

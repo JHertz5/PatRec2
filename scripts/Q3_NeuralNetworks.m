@@ -18,56 +18,18 @@ load wine_separatedData.mat
 
 %% Vary hidden layer size
 
-
-
-training_cl = zeros(3,length(training_classes));
-for i = 1:length(training_classes)
-    training_cl(training_classes(i),i) = 1;
-end
-
-maxNum = 30;
-
-for p = 1:30
-    for k = 1:maxNum
-        
-        net = patternnet(k);
-        net = train(net,training_raw',training_cl);
-        % view(net)
-        y = net(testing_raw');
-        
-        for i = 1:length(testing_raw)
-            [~, NeurClass(i)] = max(y(:,i));
-        end
-        
-        acc(p,k) = (length(testing_raw)-nnz(NeurClass - testing_classes))*100/length(testing_raw);
-        
-        clear net y NeurClass
-    end
-end
-plot(1:maxNum,mean(acc),'linewidth',4)
-grid on
-grid minor
-set(gca,'fontsize',15,'linewidth',1.5)
-xlabel('Hidden Layer Size','fontsize',30,'interpreter','latex')
-ylabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
-title('Effect of Hidden Layer Size on Performance','fontsize',30,'interpreter','latex')
-
-%% Vary number of hidden layers
 % 
 % training_cl = zeros(3,length(training_classes));
 % for i = 1:length(training_classes)
 %     training_cl(training_classes(i),i) = 1;
 % end
 % 
-% hidSize = 10;
-% maxHid = 10;
+% maxNum = 60;
 % 
-% %for p = 1:7
-%   for s = 1:hidSize  
-%     for k = 1:maxHid
+% for p = 1:30
+%     for k = 1:maxNum
 %         
-%         
-%         net = patternnet(s*ones(1,k));
+%         net = patternnet(k);
 %         net = train(net,training_raw',training_cl);
 %         % view(net)
 %         y = net(testing_raw');
@@ -76,18 +38,67 @@ title('Effect of Hidden Layer Size on Performance','fontsize',30,'interpreter','
 %             [~, NeurClass(i)] = max(y(:,i));
 %         end
 %         
-%         acc(s,k) = (length(testing_raw)-nnz(NeurClass - testing_classes))*100/length(testing_raw);
+%         acc(p,k) = (length(testing_raw)-nnz(NeurClass - testing_classes))*100/length(testing_raw);
 %         
 %         clear net y NeurClass
 %     end
-%   end
-% %end
-% surf(1:maxHid,1:hidSize,acc)
+% end
+% plot(1:maxNum,mean(acc),'linewidth',4)
+% grid on
+% grid minor
+% set(gca,'fontsize',15,'linewidth',1.5)
+% xlabel('Hidden Layer Size','fontsize',30,'interpreter','latex')
+% ylabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
+% title('Effect of Hidden Layer Size on Performance','fontsize',30,'interpreter','latex')
+
+%% Vary number of hidden layers
+
+training_cl = zeros(3,length(training_classes));
+for i = 1:length(training_classes)
+    training_cl(training_classes(i),i) = 1;
+end
+
+hidSize = 10;
+maxHid = 10;
+
+for p = 1:3
+  for s = 1:hidSize  
+    for k = 1:maxHid
+        
+        
+        net = patternnet(s*ones(1,k));
+        net = train(net,training_raw',training_cl);
+        % view(net)
+        y = net(testing_raw');
+        
+        for i = 1:length(testing_raw)
+            [~, NeurClass(i)] = max(y(:,i));
+        end
+        
+        acc(s,k,p) = (length(testing_raw)-nnz(NeurClass - testing_classes))*100/length(testing_raw);
+        
+        clear net y NeurClass
+    end
+  end
+end
+
+
+% plot(1:maxHid,mean(acc),'linewidth',4)
 % grid on
 % grid minor
 % set(gca,'fontsize',15,'linewidth',1.5)
 % shading interp
 % xlabel('Number of Hidden Layers','fontsize',30,'interpreter','latex')
-% ylabel('Hidden Layers Size','fontsize',30,'interpreter','latex')
-% zlabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
+% %ylabel('Hidden Layers Size','fontsize',30,'interpreter','latex')
+% ylabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
 % title('Effect of Number and Size of Hidden Layer on Performance','fontsize',30,'interpreter','latex')
+% % 
+surf(1:maxHid,1:hidSize,mean(acc,3))
+grid on
+grid minor
+set(gca,'fontsize',15,'linewidth',1.5)
+shading interp
+xlabel('Number of Hidden Layers','fontsize',30,'interpreter','latex')
+ylabel('Hidden Layers Size','fontsize',30,'interpreter','latex')
+zlabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
+title('Effect of Number and Size of Hidden Layer on Performance','fontsize',30,'interpreter','latex')
