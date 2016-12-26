@@ -8,6 +8,7 @@
 \usepackage{listings}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{minibox}
 \usepackage{color, soul}
 \usepackage{float}
 \usepackage{textcomp}
@@ -60,23 +61,23 @@ EEE4\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-Line 1\\
+\hl{Line 1\\
 
 Line 2\\
 
-Line 3\\
+Line 3\\}
 \end{abstract}
 
 \section{Introduction}
-Line 1\\
+\hl{Line 1\\
 
 Line 2\\
 
-Line 3\\
+Line 3\\}
 \section{Distance Metrics}
 \subsection{Distribution of Wine Data}
 
-The wine data ({\tt\small wine.csv}) provided consisted of three classes. It cis made up of 13 features representing chemical and optical information. The data can be analysed \textit{talis qualis}, however a more elaborate method is to investigate the covariance matrices. The raw data can supply us with information such as feature distribution (mean or spread), whereas covariance matrices will provide the dependency between features. This can be performed for all data altogether or for each class individually. Both methods will result in meaningful information as described in sections \ref{sec:CovAll} and \ref{sec:CovCla}. Furthermore the data was then normalised and the above was repeated.\footnote{Note that data was first separated as per instruction. Only training data is now being considered.} 
+The wine data ({\tt\small wine.csv}) provided consisted of three classes. It is made up of 13 features representing chemical and optical information. The data can be analysed \textit{talis qualis}, however a more elaborate method is to investigate the covariance matrices. The raw data can supply us with information such as feature distribution (mean or spread), whereas covariance matrices will provide the dependency between features. This can be performed for all data altogether or for each class individually. Both methods will result in meaningful information as described in sections \ref{sec:CovAll} and \ref{sec:CovCla}. Furthermore the data was then normalised and the above was repeated.\footnote{Note that data was first separated as per instruction. Only training data is now being considered.} 
 
 \vspace{-3mm}
 
@@ -356,7 +357,16 @@ Most notable performance increases have been observed for clustering using \text
 
 \section{Neural Network}
 
-To train the Neural Networks with the wine data provided we have used the raw as opposed to the normalised feature vectors. Instruction from lectures as well as from Matlab \cite{MatlabWine} were followed. 
+To train the Neural Networks with the wine data provided we have used the raw as opposed to the normalised feature vectors. Instruction from lectures as well as from Matlab \cite{MatlabWine} were followed.  Finally, we have ensured that we use all of the training data to train the neural networks by inserting the following lines of code:
+
+\begin{center}
+\minibox[frame]{
+net.divideParam.trainRatio = 100/100 \\     
+net.divideParam.valRatio = 0/100 \\     
+net.divideParam.testRatio = 0/100 \\
+} 
+\end{center}
+
 
 \subsection{Hidden Layer Size}
 It is said \cite{NN_Java}, that the best starting point for a hidden layer size is double the input layer size. Based on the outcome of that, the hidden layer size should then be varied accordingly. In this experiment, the hidden layer size was varied from 1 to 30 in order to estimate the optimal size. For the duration of this test, the neural network had the following structure.
@@ -424,18 +434,33 @@ $\downarrow$\\
 We can clearly see that as the number of hidden layers ($numHid$) increases the accuracy drops significantly. Although a peak can be observed at 8 layers, a more reasonable choice would be 3. This is because that the trend after $numHid = 4$ is strictly decreasing until $numHid = 25$. The choice of selecting $numHid = 3$ has also been influenced by the overall time performance of the algorithm.
 \subsection{Combined}
 
-Having identified the optimal number of hidden layers and their size independently, we shall investigate how they combine together. In order to achieve that, we have varied both the hidden layer size and number. Each was varied between 1 and 10. The experiment was repeated three times and mean accuracy was calculated. The resulting graph is shown in Figure \ref{fig:NNSizeNum}.
+Having identified the optimal number of hidden layers and their size independently, we shall investigate how they combine together. In order to achieve that, we have varied both the hidden layer size and number. Each was varied between 1 and 20. The experiment was repeated three times and mean accuracy was calculated. The resulting graph is shown in Figure \ref{fig:NNSizeNum}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.5\textwidth]{../results/NN_HidLay_Num_Size2}
+\includegraphics[width=0.5\textwidth]{../results/NN_HidLay_Num_Size4}
 \caption{Performance vs. Hidden Layer Number (HLN) vs. Size of Hidden Layer (SHL). Colour scale represents accuracy rate.
 \label{fig:NNSizeNum}}
 \end{figure}
 
-We can see a clear diagonal line dividing the graph between the very accurate and less accurate results. The triangle of high accuracy is defined for $SHL > HLN \quad \forall SHL, HLN \leq 10$ with its peak at $SHL = 9$ and $HLN = 3$.
-\section{Conclusion}
+We can see a clear skewed line dividing the graph between the red and yellow (accurate) and blue (less accurate) results. Maximum mean accuracy of 92.5\% has been observed for $HLN = 9$ and $SHL = 3$, proving our earlier observations. However this may be an anomaly, given that the neighbouring region at $HLN = 8$ and $SHL = 3$ produced results of 67.5\%. Clearly a more stable region, which produces high-accuracy, reliable and repeatable results is defined for roughly $SHL > (0.4*HLN-1.2) \quad \forall \quad 20 \geq SHL, HLN \geq 1$.
 
+\hl{more parameteres?}
+
+\subsection{Test with Random Data Split}
+
+\hl{Line 1\\
+
+Line 2\\
+
+Line 3\\}
+
+\section{Conclusion}
+\hl{Line 1\\
+
+Line 2\\
+
+Line 3\\}
 \begin{thebibliography}{9}
 \bibitem{wine} 
 C. S. Ough\\

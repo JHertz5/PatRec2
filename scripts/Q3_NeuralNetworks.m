@@ -58,15 +58,18 @@ for i = 1:length(training_classes)
     training_cl(training_classes(i),i) = 1;
 end
 
-hidSize = 10;
-maxHid = 10;
+hidSize = 20;
+maxHid = 20;
 
-for p = 1:3
+for p = 1:5
   for s = 1:hidSize  
     for k = 1:maxHid
         
         
         net = patternnet(s*ones(1,k));
+        net.divideParam.trainRatio = 100/100;     
+        net.divideParam.valRatio = 0/100;      
+        net.divideParam.testRatio = 0/100; 
         net = train(net,training_raw',training_cl);
         % view(net)
         y = net(testing_raw');
@@ -95,10 +98,13 @@ end
 % % 
 surf(1:maxHid,1:hidSize,mean(acc,3))
 grid on
-grid minor
+grid minor x
 set(gca,'fontsize',15,'linewidth',1.5)
 shading interp
 xlabel('Number of Hidden Layers','fontsize',30,'interpreter','latex')
 ylabel('Hidden Layers Size','fontsize',30,'interpreter','latex')
 zlabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
 title('Effect of Number and Size of Hidden Layer on Performance','fontsize',30,'interpreter','latex')
+
+18 - 6 (6-2)/(18-8) = 4/10 = 0.4
+8 - 2 2-8*0.4 = 2-3.2 = -1.2
