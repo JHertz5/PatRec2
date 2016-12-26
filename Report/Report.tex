@@ -205,7 +205,7 @@ Following from Table \ref{tab:MissMetric} it can be deduced that Chi-Squared met
 Comparatively L1, L2 and Corss Correlation metrics are very similar, each producing wrong classifications 10 to 20\% of the time. Cross Correlation defined as a square of the Euclidean distance, is supposed to be more robust to outliers as well. The results should not be too different from L2 metric as they are related by a square root. 
 
 There is a general trend that metrics produce better results when the data is normalised. This is with exception of Histogram Intersection, as seen in Figure \ref{fig:hist}. The accuracy of that metric varies with number of bins. In both cases, the graphs peak at around 13 to 15 bins, which agrees with the feature size - 13.
-For normalised data, the trend is decreasing. For raw data, on the other hand, the trend varies, with its local minimum at around 68 bins. 
+For normalised data, the trend after the peak is non-increasing. For raw data, on the other hand, the trend varies, with its local minimum at around 68 bins. 
 
 \subsection{Mahalanobis Distance Metric}
 
@@ -214,11 +214,12 @@ For normalised data, the trend is decreasing. For raw data, on the other hand, t
 In order to implement k-means clustering Matlab functions {\tt\small kmeans} and {\tt\small knnsearch} were used. The first test for $k=3$ involved normalised training and testing data. For clustering the following metrics were used: L1, L2, cosine and cross correlation.
 For classification the following metrics were used: L1, L2, Cross Correlation, Chi-Squared, and Histogram Intersection. The accuracy results (hit rate) are reported in Table \ref{tab:kmeans3}.
 
-Note that {\tt\small kmeans} function does not produce the same results every time, since the algorithm beings by placing the centres at arbitrary points in space. Hence they converge to different location most of the time. Thus in order to assess the performance each combination of kmeans and kNN algorithms was run 1000 times and average result has been calculated.
+Note that {\tt\small kmeans} function does not produce the same results every time, since the algorithm beings by placing the centres at arbitrary points in space. Hence they converge to different location most of the time. Thus in order to assess the performance each combination of kmeans and kNN algorithms was run 1000 times and average result has been calculated. Additionally we have included Table \ref{tab:kmeans_3max} showing best case performance, when clustering has been particularly successful, showing what can actually be achieved.
 
+\vspace{2mm}
 
 \begin{table}[H]
-\caption{Mean accuracy of k-means clustering and kNN classification \label{tab:kmeans3}}
+\caption{Mean Accuracy of k-means Clustering and kNN Classification over 1000 Trials \label{tab:kmeans3}}
 \small
 \begin{center}
 \begin{tabular}{|c| c c c c|}
@@ -242,7 +243,31 @@ Note that {\tt\small kmeans} function does not produce the same results every ti
 \end{center}
 \end{table}
 
-\hl{ADD MAXIMUM VALUES AS WELL}
+\begin{table}[H]
+\caption{Max Accuracy of k-means (3) Clustering and kNN Classification over 1000 Trials \label{tab:kmeans_3max}}
+\small
+\begin{center}
+\begin{tabular}{|c| c c c c|}
+\cline{2-5}
+\multicolumn{1}{c|}{ } & \multicolumn{4}{|c|}{\bf Kmeans Clustering, k = 3} \\
+\hline
+
+\bf kNN &\bf L1 &\bf L2 &\bf Cosine &\bf Corr \\ [0.5ex]
+\hline
+\bf L1 & 85.00\% & 87.50\%  & 27.50\% & 60.00\%\\ [0.5ex]
+\hline
+\bf L2 & 90.00\% & 87.50\%  & 92.50\% & 95.00\%\\ [0.5ex]
+\hline
+\bf Corr. & 82.50\% & 85.00\%  & 85.00\% & 87.50\%\\ [0.5ex]
+\hline
+\bf Chi-Sq & 87.50\% & 87.50\%  & 75.00\% & 30.00\%\\ [0.5ex]
+\hline
+\bf Hist. & 75.00\% & 65.00\%  & 50.00\% & 72.50\%\\ [0.5ex]
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
 
 An example of kmeans clustering is shown in Figure \ref{fig:clusFig}. In this example \textit{cityblock} or Minkowski form distance with $p=1$ was used. It can be seen comparing left and right images that that some point were assigned to the wrong class.
 
@@ -258,8 +283,7 @@ An example of kmeans clustering is shown in Figure \ref{fig:clusFig}. In this ex
 \subsection{k = 10 Clusters}
 
 \begin{table}[H]
-
-\caption{Mean accuracy of k-means clustering and kNN classification \label{tab:kmeans3}}
+\caption{Mean Accuracy of k-means (10) Clustering and kNN Classification over 1000 Trials \label{tab:kmeans10}}
 \small
 \begin{center}
 \begin{tabular}{|c| c c c c|}
@@ -282,7 +306,31 @@ An example of kmeans clustering is shown in Figure \ref{fig:clusFig}. In this ex
 \end{tabular}
 \end{center}
 \end{table}
-\hl{ADD MAXIMUM VALUES AS WELL}
+
+\begin{table}[H]
+\caption{Max Accuracy of k-means (10) Clustering and kNN Classification over 1000 Trials \label{tab:kmeans_max10}}
+\small
+\begin{center}
+\begin{tabular}{|c| c c c c|}
+\cline{2-5}
+\multicolumn{1}{c|}{ } & \multicolumn{4}{|c|}{\bf Kmeans Clustering, k = 10} \\
+\hline
+
+\bf kNN &\bf L1 &\bf L2 &\bf Cosine &\bf Corr \\ [0.5ex]
+\hline
+\bf L1 & 97.50\% & 97.50\%  & 47.50\% & 90.00\%\\ [0.5ex]
+\hline
+\bf L2 & 97.50\% & 97.50\%  & 95.00\% & 95.00\%\\ [0.5ex]
+\hline
+\bf Corr. & 97.50\% & 95.00\%  & 97.50\% & 100.00\%\\ [0.5ex]
+\hline
+\bf Chi-Sq & 100.00\% & 100.00\%  & 90.00\% & 57.50\%\\ [0.5ex]
+\hline
+\bf Hist. & 85.00\% & 90.00\%  & 62.50\% & 90.00\%\\ [0.5ex]
+\hline
+\end{tabular}
+\end{center}
+\end{table}
 
 \section{Neural Network}
 

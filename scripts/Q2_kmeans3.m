@@ -732,7 +732,7 @@ for hh = 1:maxIter
         w = zeros(1,size(C,1));
         for j = 1:size(C,1)
             
-            w(j) = sum(min(testing_norm(i,:), C(j,:)));
+            w(j) = sum((min(testing_norm(i,:), C(j,:))).^2);
             
         end
         [maxVal, IDX5(i)] = max(w);
