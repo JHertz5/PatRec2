@@ -53,7 +53,7 @@ EEE4\\
 Jacobus Jukka Hertzog\\
 CID: 00828711\\
 EEE4\\
-{\tt\small jjh13@ic.ac.uk}
+{\tt\small jjh113@ic.ac.uk}
 }
 
 \maketitle
@@ -211,7 +211,38 @@ For normalised data, the trend after the peak is non-increasing. For raw data, o
 
 \subsection{Mahalanobis Distance Metric}
 
-\hl{DO THAT SECTION}
+The Mahalanobis Distance Metric is similar to the L2 metric, except that a linear transformation is performed on the testing and training data before taking the measurement. This linear transformation, performed using the covariance matrix of the training data, projects the data onto a new linear subspace. A new set of axes is used, reshaping the data. The first axis the direction in which the variance of the data is greatest, and the second axis is the direction perpendicular to the first axis in which the variance is greatest (and so on for however many features the data has). The transformation also normalises the data, so that the units of each axis are the standard deviation of the data along that axis. 
+
+By taking the Euclidean distance of projections onto this subspace, a metric is created that accounts for the fact that variances are different for each feature, accounts for the covariances between features, and reduces to a standard Euclidean distance for uncorrelated features with unit variance.
+
+The Mahalanobis distance between two points was calculated as $d_S(x_1,x_2) = ||\mathbf{G}x_1 - \mathbf{G}x_2||^2_2$, where $x_1$ is the testing point, $x_2$ is the training point, $\mathbf{S}$ is the covariance matrix of the training data, $\mathbf{G}$ is the Cholesky decomposition of $\mathbf{S}^{-1}$, and $||x||^2_2$ is the squared L2 norm of $x$.
+
+This metric was testing in two ways. Firstly, the Mahalanobis distance was measured using the covariance matrix of all the training data. Secondly, the Mahalanobis distance was measured with separate covariance matrices for each class in the training data. The accuracies are shown in Table \ref{tab:MissMahal}. 
+
+\begin{table}[H]
+\caption{Miss Rates for Mahal tests \label{tab:MissMahal}}
+\small
+\begin{center}
+\begin{tabular}{|c| c c|}
+\hline
+\bf Covaraince Matrix & Single & Separated \\ [0.5ex]
+\hline
+\bf Miss Rate & 20\% & 0\% \\ [0.5ex]
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+It can be seen that the single covariance matrix method has only 80\% success, whereas the separated covariance matrices are 100\% successful. These results are explored further in Figure \ref{fig:Mahal}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{../results/Q1Db_Success}
+\caption{Classification results for Mahalanobis distance metric. Blue circles - Separated covariance matrices, Red crosses - Single covariance matrix
+\label{fig:Mahal}}
+\end{figure}
+
+It can be seen that both tests were fully successful for classes 1 and 3, but for class 2 only the method with the single covariance matrix had several failures. Seven data points from class 2 were assigned to class 1, and one more was assigned to class 3, which suggests that class 2 is in between the other classes and is too close for it to be clearly distinguished from the others. However, for the other test, the classes were individually projected, so the classes could be more easily distinguished, leading to 100\% success.
 
 \section{K-means Clustering}
 \subsection{k = 3 Clusters}
@@ -243,12 +274,12 @@ Note that {\tt\small kmeans} function does not produce the same results every ti
 \hline
 \bf Hist. & 62.25\% & 53.27\%  & 37.89\% & 43.49\%\\ [0.5ex]
 \hline
+\bf Mahal. & 85.79\% & 71.13\% & 32.87\% & 42.51\% \\ [0.5ex]
+\hline
 \end{tabular}
 \end{center}
 \end{table}
 
-\vspace{-4mm}
-\hl{ADD MAHAL STATS}
 \begin{table}[H]
 \caption{Max Accuracy of k-means (3) Clustering and kNN Classification over 1000 Trials \label{tab:kmeans_3max}}
 \small
@@ -257,7 +288,6 @@ Note that {\tt\small kmeans} function does not produce the same results every ti
 \cline{2-5}
 \multicolumn{1}{c|}{ } & \multicolumn{4}{|c|}{\bf Kmeans Clustering, k = 3} \\
 \hline
-
 \bf kNN &\bf L1 &\bf L2 &\bf Cosine &\bf Corr \\ [0.5ex]
 \hline
 \bf L1 & 85.00\% & 87.50\%  & 27.50\% & 60.00\%\\ [0.5ex]
@@ -270,12 +300,11 @@ Note that {\tt\small kmeans} function does not produce the same results every ti
 \hline
 \bf Hist. & 75.00\% & 65.00\%  & 50.00\% & 72.50\%\\ [0.5ex]
 \hline
+\bf Mahal. & 90\% & 92.50\% & 40.00\% & 65.00\%\\ [0.5ex]
+\hline
 \end{tabular}
 \end{center}
 \end{table}
-
-\vspace{-4mm}
-\hl{ADD MAHAL STATS}
 
 An example of kmeans clustering is shown in Figure \ref{fig:clusFig}. In this example \textit{cityblock} or Minkowski form distance with $p=1$ was used. It can be seen comparing left and right images that that some point were assigned to the wrong class.
 
@@ -288,20 +317,24 @@ An example of kmeans clustering is shown in Figure \ref{fig:clusFig}. In this ex
  
 Overall, \textit{L1} clustering is producing the best results with any of the Nearest Neighbour methods. The best performance is found when using \textit{L1} to cluster the training data and \textit{L2} to classify testing data - averaging 87.78\% success rate.
 
-It should be expected that combinations of the same algorithm to cluster and classify should be producing quite high results as well. This is clearly seen for \textit{L1} and \textit{Correlation}, where the hit rates both exceed 85\%.
+It should be expected that combinations of the same algorithm to cluster and classify should be producing quite high results as well. This is clearly seen for \textit{L1} and \textit{Correlation}, where the hit rates both exceed 84\%.
 
-In absolute terms, the best performace has been observed for data clustered using \textit{cosine} and classified using \textit{L2} - peaking at 95\%. On the other hand the 'worst best' combination both on average and in absolute terms has been found to be \textit{Correlation} for clustering and \textit{Chi-Square} for classification - 17.25\% and 30.0\% respectively.
+In absolute terms, the best performace has been observed for data clustered using \textit{cosine} and classified using \textit{L2} - peaking at 95\%. On the other hand the worst combination both on average and in absolute terms has been found to be \textit{Correlation} for clustering and \textit{Chi-Square} for classification - 17.25\% and 30.0\% respectively.
  
-\hl{COMPAE TO Q1D + MAHAL}
+The Mahalanobis distance with a single covariance matrix achieved 80\% accuracy, so most of the methods that used \textit{L1} clustering surpassed it, but most of the methods with other clustering techniques did not beat it. Within \textit{L1}, only the \textit{Histogram Intersection} classification had a maximum that was below 80\%. The Mahalanobis test with separated covariance matrices was 100\%, so none of the k means 3 techniques were able to match it, including the techniques that used Mahalanobis distance for classification.
  
 \subsection{k = 10 Clusters}
 
 The experiment has been repeated for 10 clusters, which exceeds number of classes. It isn't obvious whether this should produce better or worse results. On one hand, the grain size becomes smaller and thus training data is divided more accurately. For instance if we took the most extreme case, where cluster size becomes 1 - each cluster will be assigned the class of its only member, thus reaching 100\% accuracy. On the other hand, as we decrease the cluster size (increase number of clusters) the problem becomes more and more like a simple one-to-one kNN, which as shown in sections before can produce much worse results. \footnote{This is true when considering absolute maxima for each method shown in Table \ref{tab:kmeans_3max}}
 
 The mean and maximum data is shown in Tables \ref{tab:kmeans10}
-and \ref{tab:kmeans_max10}. Comparing the results from Tables \ref{tab:kmeans3} and \ref{tab:kmeans10} on one to one basis we see that in most cases the proefmance has increased. A slight drop in accuracy is observed for those metrics, which were already over 80\% accurate. 
+and \ref{tab:kmeans_max10}. Comparing the results from Tables \ref{tab:kmeans3} and \ref{tab:kmeans10} on one to one basis we see that in most cases the performance has increased. A slight drop in accuracy is observed for those metrics, which were already over 80\% accurate. 
 
-Most notable performance increases have been observed for clustering using \textit{L2}. For $k=3$ \textit{L2} has been producing results of around 65\%, whereas for $k=10$ this has increased to 85\%. Finally, looking at absolute maxima, $k=10$ has reached 100\% hit rate, when employing \textit{Correlation} for clustering and classification.
+Most notable performance increases have been observed for clustering using \textit{L2}. For $k=3$ \textit{L2} has been producing results of around 65\%, whereas for $k=10$ this has increased to 85\%. Finally, looking at absolute maxima, $k=10$ has reached 100\% hit rate, when employing \textit{Correlation} for clustering and classification, \textit{L1} and \textit{L2} for clustering and \textit{Chi-Squared} for classification, and \textit{L1} for clustering and Mahalanobis for classification.
+
+At 80\% success, the Mahalanobis distance with a covariance matrix from all the training data is lower than the \textit{L1} and \textit{L2} clustering techniques, with the exception of the \textit{Histogram Intersection} classifier. The \textit{Correlation} classifier has a higher mean accuracy than the Mahalanobis distance for the \textit{Cosine} and \textit{Correlation} clustering methods as well.
+
+The Mahalanobis distance with separated covariance matrices has 100\% success, so is only matched by the maximum accuracies for the \textit{L1} and \textit{L2} clustering techniques with \textit{Chi-Squared} classification, \textit{L1} clustering with the \textit{Mahalanobis} classifier, and \textit{Correlation} for clustering and classification.
 
 \begin{table}[H]
 \caption{Mean Accuracy of k-means (10) Clustering and kNN Classification over 1000 Trials \label{tab:kmeans10}}
@@ -323,6 +356,8 @@ Most notable performance increases have been observed for clustering using \text
 \bf Chi-Sq & 88.18\% & 87.02\%  & 64.11\% & 30.48\%\\ [0.5ex]
 \hline
 \bf Hist. & 65.45\% & 70.12\%  & 38.44\% & 51.26\%\\ [0.5ex]
+\hline
+\bf Mahal. & 82.36\% & 83.76\% & 34.45\% & 28.10\%\\ [0.5ex]
 \hline
 \end{tabular}
 \end{center}
@@ -349,11 +384,11 @@ Most notable performance increases have been observed for clustering using \text
 \hline
 \bf Hist. & 85.00\% & 90.00\%  & 62.50\% & 90.00\%\\ [0.5ex]
 \hline
+\bf Mahal. & 100.00\% & 97.50\% & 52.50\% & 62.50\%\\ [0.5ex]
+\hline
 \end{tabular}
 \end{center}
 \end{table}
-
-\hl{COMPAE TO Q1D + MAHAL}
 
 \section{Neural Network}
 
@@ -449,18 +484,11 @@ We can see a clear skewed line dividing the graph between the red and yellow (ac
 
 \subsection{Test with Random Data Split}
 
-The data has been split randomly using Matlab command {\tt\small randperm(178)}. The split ratio has been kept the same as before 118/40/30 (training/testing/validation). The new split has generated much higher accuracy as reported below in Figure \ref{fig:NewSplit}.
+\hl{Line 1\\
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{../results/NN2_2}
-\caption{Performance vs. Hidden Layer Number (HLN) vs. Size of Hidden Layer (SHL). Colour scale represents accuracy rate.
-\label{fig:NewSplit}}
-\end{figure}
+Line 2\\
 
-Figure \ref{fig:NewSplit} clearly shows that accuracy of 100\% is attainable, thus showing that the previous data split was just unfortunate.
-
-However, in general, the shape of the accuarcy zone is the same as in Figure \ref{fig:NNSizeNum} - $SHL > (0.4*HLN-1.2) \quad \forall \quad 20 \geq SHL, HLN \geq 1$. In this example, we can identify a region of 100\% accuracy - $SHL > 2 \quad \forall \quad  10 < HLN < 6$ and $10 < SHL$. Therefore taking speed into account it would be best to run a Neural Netwrok with 1 hidden layer and 4 to 6 neurons in it.
+Line 3\\}
 
 \section{Conclusion}
 \hl{Line 1\\
