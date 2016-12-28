@@ -17,6 +17,7 @@ end
 
 %load norm data
 load wine_separatedData.mat
+load wine_covMatrix.mat
 plotfigs = 0;
 
 if plotfigs == 1
@@ -59,7 +60,7 @@ for hh = 1:maxIter
         IDX1(i) = cl(IDX1(i));
     end
     
-    k3acc1(1,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
+    k10acc1(1,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -73,7 +74,7 @@ for hh = 1:maxIter
         IDX2(i) = cl(IDX2(i));
     end
     
-    k3acc2(1,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
+    k10acc2(1,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -87,7 +88,7 @@ for hh = 1:maxIter
         IDX3(i) = cl(IDX3(i));
     end
     
-    k3acc3(1,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
+    k10acc3(1,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -107,7 +108,7 @@ for hh = 1:maxIter
         IDX4(i) = cl(IDX4(i));
     end
     
-    k3acc4(1,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
+    k10acc4(1,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -129,7 +130,7 @@ for hh = 1:maxIter
         IDX5(i) = cl(IDX5(i));
     end
     
-    k3acc5(1,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
+    k10acc5(1,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -137,22 +138,20 @@ for hh = 1:maxIter
     %
     %
     
-    % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
     w = zeros(3,length(testing_norm));
-    for j = 1:3
+    G = chol(cov_allNorm^-1); % Cholesky Decomposition
+    for j = 1:size(C,1)
         for i = 1:length(testing_norm)
-            vec = testing_norm(i,:) - C(j,:);
-            imx = inv(cov(testing_norm(i,:),C(j,:)));
-            w(j,i) = vec*imx(1,1)*vec';
+            w(j,i) = sum(sum((G*testing_norm(i,:)' - G*C(j,:)').^2));
         end
     end
-    
+
     for i = 1:length(testing_norm)
         [val,kk] = min(w(:,i));
         IDX6(i) = cl(kk);
     end
     
-    k3acc6(1,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
+    k10acc6(1,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
     
     %% clustering using cityblock (L1)
     
@@ -227,7 +226,7 @@ for hh = 1:maxIter
         IDX1(i) = cl(IDX1(i));
     end
     
-    k3acc1(2,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
+    k10acc1(2,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -241,7 +240,7 @@ for hh = 1:maxIter
         IDX2(i) = cl(IDX2(i));
     end
     
-    k3acc2(2,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
+    k10acc2(2,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -255,7 +254,7 @@ for hh = 1:maxIter
         IDX3(i) = cl(IDX3(i));
     end
     
-    k3acc3(2,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
+    k10acc3(2,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -275,7 +274,7 @@ for hh = 1:maxIter
         IDX4(i) = cl(IDX4(i));
     end
     
-    k3acc4(2,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
+    k10acc4(2,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -297,21 +296,19 @@ for hh = 1:maxIter
         IDX5(i) = cl(IDX5(i));
     end
     
-    k3acc5(2,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
+    k10acc5(2,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
     
     %
     %
     % MAHAL
     %
     %
-    
-    % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
+
     w = zeros(3,length(testing_norm));
-    for j = 1:3
+    G = chol(cov_allNorm^-1); % Cholesky Decomposition
+    for j = 1:size(C,1)
         for i = 1:length(testing_norm)
-            vec = testing_norm(i,:) - C(j,:);
-            imx = inv(cov(testing_norm(i,:),C(j,:)));
-            w(j,i) = vec*imx(1,1)*vec';
+            w(j,i) = sum(sum((G*testing_norm(i,:)' - G*C(j,:)').^2));
         end
     end
     
@@ -320,7 +317,7 @@ for hh = 1:maxIter
         IDX6(i) = cl(kk);
     end
     
-    k3acc6(2,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
+    k10acc6(2,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
     
     %% clustering using cosine
     
@@ -355,7 +352,7 @@ for hh = 1:maxIter
         IDX1(i) = cl(IDX1(i));
     end
     
-    k3acc1(3,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
+    k10acc1(3,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -369,7 +366,7 @@ for hh = 1:maxIter
         IDX2(i) = cl(IDX2(i));
     end
     
-    k3acc2(3,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
+    k10acc2(3,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -383,7 +380,7 @@ for hh = 1:maxIter
         IDX3(i) = cl(IDX3(i));
     end
     
-    k3acc3(3,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
+    k10acc3(3,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -403,7 +400,7 @@ for hh = 1:maxIter
         IDX4(i) = cl(IDX4(i));
     end
     
-    k3acc4(3,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
+    k10acc4(3,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -425,21 +422,19 @@ for hh = 1:maxIter
         IDX5(i) = cl(IDX5(i));
     end
     
-    k3acc5(3,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
+    k10acc5(3,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
     
     %
     %
     % MAHAL
     %
     %
-    
-    % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
+
     w = zeros(3,length(testing_norm));
-    for j = 1:3
+    G = chol(cov_allNorm^-1); % Cholesky Decomposition
+    for j = 1:size(C,1)
         for i = 1:length(testing_norm)
-            vec = testing_norm(i,:) - C(j,:);
-            imx = inv(cov(testing_norm(i,:),C(j,:)));
-            w(j,i) = vec*imx(1,1)*vec';
+            w(j,i) = sum(sum((G*testing_norm(i,:)' - G*C(j,:)').^2));
         end
     end
     
@@ -448,7 +443,7 @@ for hh = 1:maxIter
         IDX6(i) = cl(kk);
     end
     
-    k3acc6(3,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
+    k10acc6(3,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
     
     %% clustering using correlation
     
@@ -483,7 +478,7 @@ for hh = 1:maxIter
         IDX1(i) = cl(IDX1(i));
     end
     
-    k3acc1(4,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
+    k10acc1(4,hh) = (1-nnz(IDX1' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -497,7 +492,7 @@ for hh = 1:maxIter
         IDX2(i) = cl(IDX2(i));
     end
     
-    k3acc2(4,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
+    k10acc2(4,hh) = (1-nnz(IDX2' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -511,7 +506,7 @@ for hh = 1:maxIter
         IDX3(i) = cl(IDX3(i));
     end
     
-    k3acc3(4,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
+    k10acc3(4,hh) = (1-nnz(IDX3' - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -531,7 +526,7 @@ for hh = 1:maxIter
         IDX4(i) = cl(IDX4(i));
     end
     
-    k3acc4(4,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
+    k10acc4(4,hh) = (1-nnz(IDX4 - testing_classes)/length(testing_classes))*100;
     
     %
     %
@@ -553,21 +548,19 @@ for hh = 1:maxIter
         IDX5(i) = cl(IDX5(i));
     end
     
-    k3acc5(4,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
+    k10acc5(4,hh) = (1-nnz(IDX5 - testing_classes)/length(testing_classes))*100;
     
     %
     %
     % MAHAL
     %
     %
-    
-    % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
+
     w = zeros(3,length(testing_norm));
-    for j = 1:3
+    G = chol(cov_allNorm^-1); % Cholesky Decomposition
+    for j = 1:size(C,1)
         for i = 1:length(testing_norm)
-            vec = testing_norm(i,:) - C(j,:);
-            imx = inv(cov(testing_norm(i,:),C(j,:)));
-            w(j,i) = vec*imx(1,1)*vec';
+            w(j,i) = sum(sum((G*testing_norm(i,:)' - G*C(j,:)').^2));
         end
     end
     
@@ -576,35 +569,35 @@ for hh = 1:maxIter
         IDX6(i) = cl(kk);
     end
     
-    k3acc6(4,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
+    k10acc6(4,hh) = (1-nnz(IDX6 - testing_classes)/length(testing_classes))*100;
     
 end
 
-% k3accX -> Rows: L1, L2, COS, CORR / Cols: Number of runs
-% k3accX -> X=1 L1, X=2 L2, X=3 Corr, X=4 ChiSq, X=5 Hist
+% k10accX -> Rows: L1, L2, COS, CORR / Cols: Number of runs
+% k10accX -> X=1 L1, X=2 L2, X=3 Corr, X=4 ChiSq, X=5 Hist X=6 Mahal
 
 
 
 % statistical properties (mean vaue for each, max value for each, min
 % values for each)
 
-mean_acc(1,:) = mean(k3acc1');
-mean_acc(2,:) = mean(k3acc2');
-mean_acc(3,:) = mean(k3acc3');
-mean_acc(4,:) = mean(k3acc4');
-mean_acc(5,:) = mean(k3acc5');
-mean_acc(6,:) = mean(k3acc6');
+mean_acc(1,:) = mean(k10acc1');
+mean_acc(2,:) = mean(k10acc2');
+mean_acc(3,:) = mean(k10acc3');
+mean_acc(4,:) = mean(k10acc4');
+mean_acc(5,:) = mean(k10acc5');
+mean_acc(6,:) = mean(k10acc6');
 
-max_acc(1,:) = max(k3acc1');
-max_acc(2,:) = max(k3acc2');
-max_acc(3,:) = max(k3acc3');
-max_acc(4,:) = max(k3acc4');
-max_acc(5,:) = max(k3acc5');
-max_acc(6,:) = max(k3acc6');
+max_acc(1,:) = max(k10acc1');
+max_acc(2,:) = max(k10acc2');
+max_acc(3,:) = max(k10acc3');
+max_acc(4,:) = max(k10acc4');
+max_acc(5,:) = max(k10acc5');
+max_acc(6,:) = max(k10acc6');
 
-min_acc(1,:) = min(k3acc1');
-min_acc(2,:) = min(k3acc2');
-min_acc(3,:) = min(k3acc3');
-min_acc(4,:) = min(k3acc4');
-min_acc(5,:) = min(k3acc5');
-min_acc(6,:) = min(k3acc6');
+min_acc(1,:) = min(k10acc1');
+min_acc(2,:) = min(k10acc2');
+min_acc(3,:) = min(k10acc3');
+min_acc(4,:) = min(k10acc4');
+min_acc(5,:) = min(k10acc5');
+min_acc(6,:) = min(k10acc6');
