@@ -449,11 +449,18 @@ We can see a clear skewed line dividing the graph between the red and yellow (ac
 
 \subsection{Test with Random Data Split}
 
-\hl{Line 1\\
+The data has been split randomly using Matlab command {\tt\small randperm(178)}. The split ratio has been kept the same as before 118/40/30 (training/testing/validation). The new split has generated much higher accuracy as reported below in Figure \ref{fig:NewSplit}.
 
-Line 2\\
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{../results/NN2_2}
+\caption{Performance vs. Hidden Layer Number (HLN) vs. Size of Hidden Layer (SHL). Colour scale represents accuracy rate.
+\label{fig:NewSplit}}
+\end{figure}
 
-Line 3\\}
+Figure \ref{fig:NewSplit} clearly shows that accuracy of 100\% is attainable, thus showing that the previous data split was just unfortunate.
+
+However, in general, the shape of the accuarcy zone is the same as in Figure \ref{fig:NNSizeNum} - $SHL > (0.4*HLN-1.2) \quad \forall \quad 20 \geq SHL, HLN \geq 1$. In this example, we can identify a region of 100\% accuracy - $SHL > 2 \quad \forall \quad  10 < HLN < 6$ and $10 < SHL$. Therefore taking speed into account it would be best to run a Neural Netwrok with 1 hidden layer and 4 to 6 neurons in it.
 
 \section{Conclusion}
 \hl{Line 1\\

@@ -19,7 +19,7 @@ end
 load wine_separatedData.mat
 load wine_covMatrix.mat
 
-plotfigs = 1;
+plotfigs = 0;
 
 if plotfigs == 1
     maxIter = 1;

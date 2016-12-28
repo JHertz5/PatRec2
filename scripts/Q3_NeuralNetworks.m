@@ -13,9 +13,24 @@ else
     fprintf('Move to NotPatRecCW2 directory\n');
 end
 
-%load norm data
-load wine_separatedData.mat
+% load norm data
+% load wine_separatedData.mat
 
+[x,t] = wine_dataset;
+
+idcs = randperm(178);
+
+tr = 118;
+tes = 40;
+val = 178-118-40;
+training_raw = x(:,idcs(1:tr));
+training_cl = t(:,idcs(1:tr));
+testing_raw = x(:,idcs(tr+1:tr+tes));
+testing_cl = t(:,idcs(tr+1:tr+tes));
+
+for i = 1:length(testing_raw)
+   [~,testing_classes(i)] = max(testing_cl(:,i));
+end
 %% Vary hidden layer size
 
 % 
@@ -24,44 +39,49 @@ load wine_separatedData.mat
 %     training_cl(training_classes(i),i) = 1;
 % end
 % 
-% maxNum = 60;
-% 
-% for p = 1:30
-%     for k = 1:maxNum
-%         
-%         net = patternnet(k);
-%         net = train(net,training_raw',training_cl);
-%         % view(net)
-%         y = net(testing_raw');
-%         
-%         for i = 1:length(testing_raw)
-%             [~, NeurClass(i)] = max(y(:,i));
-%         end
-%         
-%         acc(p,k) = (length(testing_raw)-nnz(NeurClass - testing_classes))*100/length(testing_raw);
-%         
-%         clear net y NeurClass
-%     end
-% end
-% plot(1:maxNum,mean(acc),'linewidth',4)
-% grid on
-% grid minor
-% set(gca,'fontsize',15,'linewidth',1.5)
-% xlabel('Hidden Layer Size','fontsize',30,'interpreter','latex')
-% ylabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
-% title('Effect of Hidden Layer Size on Performance','fontsize',30,'interpreter','latex')
+maxNum = 15;
+
+for p = 1:10
+    for k = 1:maxNum
+        net.divideParam.trainRatio = 100/100;     
+        net.divideParam.valRatio = 0/100;      
+        net.divideParam.testRatio = 0/100;
+        net = patternnet(k);
+        net = train(net,training_raw,training_cl);
+        % view(net)
+        y = net(testing_raw);
+        
+        for i = 1:length(testing_raw)
+            [~, NeurClass(i)] = max(y(:,i));
+        end
+        
+        acc1(p,k) = (length(testing_raw)-nnz(NeurClass - testing_classes))*100/length(testing_raw);
+        
+        clear net y NeurClass
+    end
+end
+
+figure(1)
+plot(1:maxNum,mean(acc1),'linewidth',4)
+grid on
+grid minor
+set(gca,'fontsize',15,'linewidth',1.5)
+xlabel('Hidden Layer Size','fontsize',30,'interpreter','latex')
+ylabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
+title('Effect of Hidden Layer Size on Performance','fontsize',30,'interpreter','latex')
 
 %% Vary number of hidden layers
-
-training_cl = zeros(3,length(training_classes));
-for i = 1:length(training_classes)
-    training_cl(training_classes(i),i) = 1;
-end
+% 
+% 
+% training_cl = zeros(3,length(training_classes));
+% for i = 1:length(training_classes)
+%     training_cl(training_classes(i),i) = 1;
+% end
 
 hidSize = 20;
 maxHid = 20;
 
-for p = 1:5
+for p = 1:3
   for s = 1:hidSize  
     for k = 1:maxHid
         
@@ -70,15 +90,15 @@ for p = 1:5
         net.divideParam.trainRatio = 100/100;     
         net.divideParam.valRatio = 0/100;      
         net.divideParam.testRatio = 0/100; 
-        net = train(net,training_raw',training_cl);
+        net = train(net,training_raw,training_cl);
         % view(net)
-        y = net(testing_raw');
+        y = net(testing_raw);
         
         for i = 1:length(testing_raw)
             [~, NeurClass(i)] = max(y(:,i));
         end
         
-        acc(s,k,p) = (length(testing_raw)-nnz(NeurClass - testing_classes))*100/length(testing_raw);
+        acc2(s,k,p) = (length(testing_raw)-nnz(NeurClass - testing_classes))*100/length(testing_raw);
         
         clear net y NeurClass
     end
@@ -96,9 +116,9 @@ end
 % ylabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
 % title('Effect of Number and Size of Hidden Layer on Performance','fontsize',30,'interpreter','latex')
 % % 
-surf(1:maxHid,1:hidSize,mean(acc,3))
+surf(1:maxHid,1:hidSize,mean(acc2,3))
 grid on
-grid minor x
+grid minor
 set(gca,'fontsize',15,'linewidth',1.5)
 shading interp
 xlabel('Number of Hidden Layers','fontsize',30,'interpreter','latex')
@@ -106,5 +126,3 @@ ylabel('Hidden Layers Size','fontsize',30,'interpreter','latex')
 zlabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
 title('Effect of Number and Size of Hidden Layer on Performance','fontsize',30,'interpreter','latex')
 
-18 - 6 (6-2)/(18-8) = 4/10 = 0.4
-8 - 2 2-8*0.4 = 2-3.2 = -1.2
