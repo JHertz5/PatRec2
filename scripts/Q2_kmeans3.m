@@ -17,7 +17,9 @@ end
 
 %load norm data
 load wine_separatedData.mat
-plotfigs = 0;
+load wine_covMatrix.mat
+
+plotfigs = 1;
 
 if plotfigs == 1
     maxIter = 1;
@@ -184,11 +186,10 @@ for hh = 1:maxIter
     
     % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
     w = zeros(3,length(testing_norm));
+    G = chol(cov_allNorm^-1); % Cholesky Decomposition
     for j = 1:3
         for i = 1:length(testing_norm)
-            vec = testing_norm(i,:) - C(j,:);
-            imx = inv(cov(testing_norm(i,:),C(j,:)));
-            w(j,i) = vec*imx(1,1)*vec';
+            w(j,i) = sum(sum((G*testing_norm(i,:)' - G*C(j,:)').^2));
         end
     end
     
@@ -401,14 +402,13 @@ for hh = 1:maxIter
     
     % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
     w = zeros(3,length(testing_norm));
+    G = chol(cov_allNorm^-1); % Cholesky Decomposition
     for j = 1:3
         for i = 1:length(testing_norm)
-            vec = testing_norm(i,:) - C(j,:);
-            imx = inv(cov(testing_norm(i,:),C(j,:)));
-            w(j,i) = vec*imx(1,1)*vec';
+            w(j,i) = sum(sum((G*testing_norm(i,:)' - G*C(j,:)').^2));
         end
     end
-    
+
     for i = 1:length(testing_norm)
         switch min(w(:,i))
             case w(1,i)
@@ -580,11 +580,10 @@ for hh = 1:maxIter
     
     % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
     w = zeros(3,length(testing_norm));
+    G = chol(cov_allNorm^-1); % Cholesky Decomposition
     for j = 1:3
         for i = 1:length(testing_norm)
-            vec = testing_norm(i,:) - C(j,:);
-            imx = inv(cov(testing_norm(i,:),C(j,:)));
-            w(j,i) = vec*imx(1,1)*vec';
+            w(j,i) = sum(sum((G*testing_norm(i,:)' - G*C(j,:)').^2));
         end
     end
     
@@ -759,11 +758,10 @@ for hh = 1:maxIter
     
     % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
     w = zeros(3,length(testing_norm));
+    G = chol(cov_allNorm^-1); % Cholesky Decomposition
     for j = 1:3
         for i = 1:length(testing_norm)
-            vec = testing_norm(i,:) - C(j,:);
-            imx = inv(cov(testing_norm(i,:),C(j,:)));
-            w(j,i) = vec*imx(1,1)*vec';
+            w(j,i) = sum(sum((G*testing_norm(i,:)' - G*C(j,:)').^2));
         end
     end
     
