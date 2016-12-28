@@ -53,7 +53,7 @@ EEE4\\
 Jacobus Jukka Hertzog\\
 CID: 00828711\\
 EEE4\\
-{\tt\small jjh13@ic.ac.uk}
+{\tt\small jjh113@ic.ac.uk}
 }
 
 \maketitle
@@ -211,7 +211,22 @@ For normalised data, the trend after the peak is non-increasing. For raw data, o
 
 \subsection{Mahalanobis Distance Metric}
 
-\hl{DO THAT SECTION}
+The Mahalanobis Distance Metric is similar to the L2 metric, except that a linear transformation is performed on the testing and training data before taking the measurement. This linear transformation, performed using the covariance matrix of the training data, projects the data onto a new linear subspace. A new set of axes is used, reshaping the data. The first axis the direction in which the variance of the data is greatest, and the second axis is the direction perpendicular to the first axis in which the variance is greatest (and so on for however many features the data has). The transformation also normalises the data, so that the units of each axis are the standard deviation of the data along that axis. 
+
+By taking the Euclidean distance of projections onto this subspace, a metric is created that accounts for the fact that variances are different for each feature, accounts for the covariances between features, and reduces to a standard Euclidean distance for uncorrelated features with unit variance.
+
+The Mahalanobis distance between two points was calculated as $d_S(x_1,x_2) = ||\mathbf{G}x_1 - \mathbf{G}x_2||^2_2$, where $x_1$ is the testing point, $x_2$ is the training point, $\mathbf{S}$ is the covariance matrix of the training data, $\mathbf{G}$ is the Cholesky decomposition of $\mathbf{S}^{-1}$, and $||x||^2_2$ is the squared L2 norm of $x$.
+
+This metric was testing in two ways. Firstly, the Mahalanobis distance was measured using the covariance matrix of all the training data. Secondly, the Mahalanobis distance was measured with separate covariance matrices for each class in the training data. The first test classified testing points with 80\% accuracy, and the second test had 100\% accuracy. The classifications can be seen in Figure /ref{fig:Mahal}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{../results/Q1Db_Success}
+\caption{Classification results for Mahalanobis distance metric. Blue circles - Separated covariance matrices, Red crosses - Single covariance matrix
+\label{fig:Mahal}}
+\end{figure}
+
+It can be seen that both tests were fully successful for classes 1 and 3, but for class 2 only the method with the single covariance matrix had several failures. Seven data points from class 2 were assigned to class 1, and one more was assigned to class 3, which suggests that class 2 is in between the other classes and is too close for them to be clearly distinguished. 
 
 \section{K-means Clustering}
 \subsection{k = 3 Clusters}

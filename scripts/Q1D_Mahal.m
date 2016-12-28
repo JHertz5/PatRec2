@@ -21,40 +21,53 @@ load wine_covMatrix.mat
 
 numTraining = length(training_classes);
 numTesting = length(testing_classes);
+numClasses = 3;
 
 class1Indexes = find(training_classes == 1);
 class2Indexes = find(training_classes == 2);
 class3Indexes = find(training_classes == 3);
 
-mahalDistance_covSeparate = zeros(numTesting, numTraining);
+% mahalDistance_covSeparate = zeros(numTesting, numTraining);
+mahalDistance_covSeparate = zeros(numTesting, numClasses);
 mahalDistance_covAll = zeros(numTesting, numTraining);
 
-mahalClass_covSeparate = zeros(1,numTesting);
-mahalClass_covAll = zeros(1,numTesting);
+mahalClass_covSeparate = zeros(1,numTesting,'uint8');
+mahalClass_covAll = zeros(1,numTesting,'uint8');
 
 for testingIndex = 1:numTesting
     %test one vector of testing data at a time
     
+    % For separated cov matrices: 
+    % For each class, use the class' cov matrix and find the smallest mahal
+    % distance within that class. At the end, assign the testing point to
+    % the class that had the smallest mahal distance
+    
     % Class 1 covariance matrix
     G = chol(cov_1Norm^-1); % Cholesky Decomposition
-    mahalDistance_covSeparate(testingIndex,:) = sum((G*testing_norm(testingIndex,:)' - G*training_norm').^2);
+    mahalDistance_covSeparate(testingIndex,1) = min(sum((G*testing_norm(testingIndex,:)' - G*training_norm(class1Indexes,:)').^2));
     
     % Class 2 covariance matrix
     G = chol(cov_2Norm^-1); % Cholesky Decomposition
-    mahalDistance_class2Temp = sum((G*testing_norm(testingIndex,:)' - G*training_norm').^2);
-    mahalDistance_covSeparate(testingIndex,:) = min(mahalDistance_covSeparate(testingIndex,:), mahalDistance_class2Temp);
-    
+    mahalDistance_covSeparate(testingIndex,2) = min(sum((G*testing_norm(testingIndex,:)' - G*training_norm(class2Indexes,:)').^2));
+
     % Class 3 covariance matrix
     G = chol(cov_3Norm^-1); % Cholesky Decomposition
-    mahalDistance_class3Temp = sum((G*testing_norm(testingIndex,:)' - G*training_norm').^2);
-    mahalDistance_covSeparate(testingIndex,:) = min(mahalDistance_covSeparate(testingIndex,:), mahalDistance_class3Temp);
-    
+    mahalDistance_covSeparate(testingIndex,3) = min(sum((G*testing_norm(testingIndex,:)' - G*training_norm(class3Indexes,:)').^2));
+
+    % Find which class the testing point is closest to
     [~,minIndex] = min(mahalDistance_covSeparate(testingIndex,:));
-    mahalClass_covSeparate(testingIndex) = training_classes(minIndex);
+    mahalClass_covSeparate(testingIndex) = minIndex;
     
-    % Full covariance matrix
+    % For full cov matrix:
+    % For each training point, use the full cov matrix and find the mahal 
+    % distance from the testing point. At the end, assign the testing 
+    % point to the class of the training point that had the smallest mahal 
+    % distance
+    
     G = chol(cov_allNorm^-1); % Cholesky Decomposition
     mahalDistance_covAll(testingIndex,:) = sum((G*testing_norm(testingIndex,:)' - G*training_norm').^2);
+    
+    % Find which training point the testing point is closest to
     [~,minIndex] = min(mahalDistance_covAll(testingIndex,:));
     mahalClass_covAll(testingIndex) = training_classes(minIndex);
     
@@ -71,25 +84,22 @@ mahalSuccess_covSeparate(mahalFailureIndices_covSeparate) = 0;
 mahalSuccess_covAll = ones(1,numTesting);
 mahalSuccess_covAll(mahalFailureIndices_covAll) = 0;
 
-mahalAcc_covSeparate = sum(mahalSuccess_covSeparate)*100/numTesting
-mahalAcc_covAll = sum(mahalSuccess_covAll)*100/numTesting
+mahalAcc_covSeparate = sum(mahalSuccess_covSeparate)*100/numTesting;
+mahalAcc_covAll = sum(mahalSuccess_covAll)*100/numTesting;
+
+fprintf('Accuracy for separate covariance matrix for each class: %i%%\n', mahalAcc_covSeparate);
+fprintf('Accuracy for single covariance matrix with all classes: %i%%\n', mahalAcc_covAll);
 
 %% Plot graphs
 
 figure
-plot(mahalSuccess_covSeparate, 'LineWidth', 2)
-% plot(mahalDistance_covSeparate(20,:), 'LineWidth', 2)
+scatter(1:40,mahalClass_covSeparate,200,'LineWidth',2)
 hold on
-plot(mahalSuccess_covAll, 'LineWidth', 2)
-% plot(mahalDistance_covAll(20,:), 'LineWidth', 2)
-% ylabel('Mahalanobis Distance','interpreter','latex','fontsize',30)
-% xlabel('Training Data Index','interpreter','latex','fontsize',30)
-ylabel('Successful Classification','interpreter','latex','fontsize',30)
-xlabel('Training Data Index','interpreter','latex','fontsize',30)
-% line([40 40], ylim, 'Color', 'black')
-% line([87 87], ylim, 'Color', 'black')
-line([13 13], ylim, 'Color', 'black', 'LineWidth', 2)
-line([29 29], ylim, 'Color', 'black', 'LineWidth', 2)
+scatter(1:40,mahalClass_covAll,200,'x','LineWidth',2)
 
-legend('Separated Data Cov. Matrix', 'All Data Cov. Matrix', 'Class Boundary')
-
+ylim([1 3])
+line([13.5 13.5], ylim, 'Color', 'black', 'LineWidth', 2)
+line([29.5 29.5], ylim, 'Color', 'black', 'LineWidth', 2)
+set(gca,'YTick',[1 2 3],'XTick',[7 22 35], 'XTickLabels',{'1' '2' '3'},'FontSize', 20);
+ylabel('Assigned Class','interpreter','latex','fontsize',30)
+xlabel('True Class','interpreter','latex','fontsize',30)

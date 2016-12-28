@@ -184,7 +184,6 @@ for hh = 1:maxIter
     %
     %
     
-    % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
     w = zeros(3,length(testing_norm));
     G = chol(cov_allNorm^-1); % Cholesky Decomposition
     for j = 1:3
@@ -400,7 +399,6 @@ for hh = 1:maxIter
     %
     %
     
-    % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
     w = zeros(3,length(testing_norm));
     G = chol(cov_allNorm^-1); % Cholesky Decomposition
     for j = 1:3
@@ -578,7 +576,6 @@ for hh = 1:maxIter
     %
     %
     
-    % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
     w = zeros(3,length(testing_norm));
     G = chol(cov_allNorm^-1); % Cholesky Decomposition
     for j = 1:3
@@ -756,7 +753,6 @@ for hh = 1:maxIter
     %
     %
     
-    % this is the same as doing (x-m)^T cov^-1 (x-m) for each cov matrix
     w = zeros(3,length(testing_norm));
     G = chol(cov_allNorm^-1); % Cholesky Decomposition
     for j = 1:3
