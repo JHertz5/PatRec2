@@ -19,7 +19,6 @@ end
 [x,t] = wine_dataset;
 
 idcs = randperm(178);
-
 tr = 118;
 tes = 40;
 val = 178-118-40;
