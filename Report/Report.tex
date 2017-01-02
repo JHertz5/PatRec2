@@ -19,6 +19,11 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage[utf8]{inputenc}
+\lstset{
+basicstyle=\small\ttfamily,
+columns=flexible,
+breaklines=true
+}
 
 % Include other packages here, before hyperref.
 
@@ -503,4 +508,169 @@ Heaton Research, Inc. St. Louis, MO, USA\\
 
 \end{thebibliography}
 
+\section{Appendix: Matlab Scripts}
+\subsection{Mahalanobis Distance Tests (Q1Db)}
+{
+\begin{lstlisting}
+
+%load data
+load wine_separatedData.mat
+load wine_covMatrix.mat
+
+%% Mahalanobis Distance Using Individual Class Covariance Matrices from B.b
+
+numTraining = length(training_classes);
+numTesting = length(testing_classes);
+numClasses = 3;
+
+class1Indexes = find(training_classes==1);
+class2Indexes = find(training_classes==2);
+class3Indexes = find(training_classes==3);
+
+
+mahalDistance_covSeparate = zeros(numTesting, numClasses);
+mahalDistance_covAll = zeros(numTesting, numTraining);
+
+mahalClass_covSeparate = zeros(1,numTesting,'uint8');
+mahalClass_covAll = zeros(1,numTesting,'uint8');
+
+for testingIndex = 1:numTesting 
+
+    % For separated cov matrices:     
+    % Class 1 covariance matrix
+    G = chol(cov_1Norm^-1); % Cholesky Decomposition
+    mahalDistance_covSeparate(testingIndex,1) = min(sum((G*testing_norm(testingIndex,:)' - G*training_norm(class1Indexes,:)').^2));
+    
+    % Class 2 covariance matrix
+    G = chol(cov_2Norm^-1); % Cholesky Decomposition
+    mahalDistance_covSeparate(testingIndex,2) = min(sum((G*testing_norm(testingIndex,:)' - G*training_norm(class2Indexes,:)').^2));
+
+    % Class 3 covariance matrix
+    G = chol(cov_3Norm^-1); % Cholesky Decomposition
+    mahalDistance_covSeparate(testingIndex,3) = min(sum((G*testing_norm(testingIndex,:)' - G*training_norm(class3Indexes,:)').^2));
+
+    [~,minIndex] = min(mahalDistance_covSeparate(testingIndex,:));
+    mahalClass_covSeparate(testingIndex) = minIndex;
+    
+    % For full cov matrix:   
+    G = chol(cov_allNorm^-1); % Cholesky Decomposition
+    mahalDistance_covAll(testingIndex,:) = sum((G*testing_norm(testingIndex,:)' - G*training_norm').^2);
+    
+    [~,minIndex] = min(mahalDistance_covAll(testingIndex,:));
+    mahalClass_covAll(testingIndex) = training_classes(minIndex);
+end
+
+%% Evaluate results
+
+% Find failure indices
+mahalFailureIndices_covSeparate = find(testing_classes ~= mahalClass_covSeparate);
+mahalFailureIndices_covAll = find(testing_classes ~= mahalClass_covAll);
+
+mahalSuccess_covSeparate = ones(1,numTesting);
+mahalSuccess_covSeparate(mahalFailureIndices_covSeparate) = 0;
+mahalSuccess_covAll = ones(1,numTesting);
+mahalSuccess_covAll(mahalFailureIndices_covAll) = 0;
+
+mahalAcc_covSeparate = sum(mahalSuccess_covSeparate)*100/numTesting;
+mahalAcc_covAll = sum(mahalSuccess_covAll)*100/numTesting;
+\end{lstlisting}
+}
+
+\subsection{Neural Networks (Q3)}
+{
+\begin{lstlisting}
+[x,t] = wine_dataset;
+
+idcs = randperm(178);
+tr = 118;
+tes = 40;
+val = 178-118-40;
+training_raw = x(:,idcs(1:tr));
+training_cl = t(:,idcs(1:tr));
+testing_raw = x(:,idcs(tr+1:tr+tes));
+testing_cl = t(:,idcs(tr+1:tr+tes));
+
+for i = 1:length(testing_raw)
+   [~,testing_classes(i)] = max(testing_cl(:,i));
+end
+%% Vary hidden layer size
+
+% 
+% training_cl = zeros(3,length(training_classes));
+% for i = 1:length(training_classes)
+%     training_cl(training_classes(i),i) = 1;
+% end
+% 
+maxNum = 15;
+
+for p = 1:10
+    for k = 1:maxNum
+        net.divideParam.trainRatio = 100/100;     
+        net.divideParam.valRatio = 0/100;      
+        net.divideParam.testRatio = 0/100;
+        net = patternnet(k);
+        net = train(net,training_raw,training_cl);
+        % view(net)
+        y = net(testing_raw);
+        
+        for i = 1:length(testing_raw)
+            [~, NeurClass(i)] = max(y(:,i));
+        end
+        
+        acc1(p,k) = (length(testing_raw)-nnz(NeurClass - testing_classes))*100/length(testing_raw);
+        
+        clear net y NeurClass
+    end
+end
+
+figure(1)
+plot(1:maxNum,mean(acc1),'linewidth',4)
+grid on
+grid minor
+set(gca,'fontsize',15,'linewidth',1.5)
+xlabel('Hidden Layer Size','fontsize',30,'interpreter','latex')
+ylabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
+title('Effect of Hidden Layer Size on Performance','fontsize',30,'interpreter','latex')
+
+%% Vary number of hidden layers
+% 
+% 
+% training_cl = zeros(3,length(training_classes));
+% for i = 1:length(training_classes)
+%     training_cl(training_classes(i),i) = 1;
+% end
+
+hidSize = 20;
+maxHid = 20;
+
+for p = 1:3
+  for s = 1:hidSize  
+    for k = 1:maxHid
+        
+        
+        net = patternnet(s*ones(1,k));
+        net.divideParam.trainRatio = 100/100;     
+        net.divideParam.valRatio = 0/100;      
+        net.divideParam.testRatio = 0/100; 
+        net = train(net,training_raw,training_cl);
+        % view(net)
+        y = net(testing_raw);
+        
+        for i = 1:length(testing_raw)
+            [~, NeurClass(i)] = max(y(:,i));
+        end
+        
+        acc2(s,k,p) = (length(testing_raw)-nnz(NeurClass - testing_classes))*100/length(testing_raw);
+        
+        clear net y NeurClass
+    end
+  end
+end
+
+
+
+
+
+\end{lstlisting}
+}
 \end{document}

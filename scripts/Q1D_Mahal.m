@@ -27,7 +27,6 @@ class1Indexes = find(training_classes == 1);
 class2Indexes = find(training_classes == 2);
 class3Indexes = find(training_classes == 3);
 
-% mahalDistance_covSeparate = zeros(numTesting, numTraining);
 mahalDistance_covSeparate = zeros(numTesting, numClasses);
 mahalDistance_covAll = zeros(numTesting, numTraining);
 
