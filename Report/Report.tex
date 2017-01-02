@@ -593,14 +593,9 @@ testing_cl = t(:,idcs(tr+1:tr+tes));
 for i = 1:length(testing_raw)
    [~,testing_classes(i)] = max(testing_cl(:,i));
 end
+
 %% Vary hidden layer size
 
-% 
-% training_cl = zeros(3,length(training_classes));
-% for i = 1:length(training_classes)
-%     training_cl(training_classes(i),i) = 1;
-% end
-% 
 maxNum = 15;
 
 for p = 1:10
@@ -610,7 +605,6 @@ for p = 1:10
         net.divideParam.testRatio = 0/100;
         net = patternnet(k);
         net = train(net,training_raw,training_cl);
-        % view(net)
         y = net(testing_raw);
         
         for i = 1:length(testing_raw)
@@ -633,12 +627,6 @@ ylabel('Accuracy [\%]','fontsize',30,'interpreter','latex')
 title('Effect of Hidden Layer Size on Performance','fontsize',30,'interpreter','latex')
 
 %% Vary number of hidden layers
-% 
-% 
-% training_cl = zeros(3,length(training_classes));
-% for i = 1:length(training_classes)
-%     training_cl(training_classes(i),i) = 1;
-% end
 
 hidSize = 20;
 maxHid = 20;
@@ -653,7 +641,6 @@ for p = 1:3
         net.divideParam.valRatio = 0/100;      
         net.divideParam.testRatio = 0/100; 
         net = train(net,training_raw,training_cl);
-        % view(net)
         y = net(testing_raw);
         
         for i = 1:length(testing_raw)
@@ -667,10 +654,7 @@ for p = 1:3
   end
 end
 
-
-
-
-
 \end{lstlisting}
 }
+
 \end{document}
